@@ -45,16 +45,27 @@ function TeacherDashboard({ user }) {
       return;
     }
 
-    const socket = io('http://localhost:8001');
-    socket.emit('create-game', {
-      questionSetId: selectedSet,
-      gameMode: selectedMode,
-      settings: {}
+    // Connect to Socket.io using the same origin (will be proxied)
+    const socket = io();
+    
+    socket.on('connect', () => {
+      console.log('Socket connected:', socket.id);
+      socket.emit('create-game', {
+        questionSetId: selectedSet,
+        gameMode: selectedMode,
+        settings: {}
+      });
     });
 
     socket.on('game-created', (data) => {
+      console.log('Game created:', data.gameCode);
       socket.disconnect();
       navigate(`/lobby/${data.gameCode}`);
+    });
+
+    socket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error);
+      alert('Failed to connect to game server. Please try again.');
     });
   };
 
