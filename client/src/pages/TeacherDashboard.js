@@ -45,9 +45,22 @@ function TeacherDashboard({ user }) {
       return;
     }
 
-    // Connect to Socket.io using the same origin (will be proxied)
-    const socket = io();
+    // Show loading state
+    const originalButtonText = 'Host Game Now';
     
+    // Connect to Socket.io using the same origin (will be proxied)
+    const socket = io({
+      transports: ['polling', 'websocket'],
+      reconnection: true,
+      reconnectionAttempts: 3
+    });
+    
+    // Set timeout for connection
+    const connectionTimeout = setTimeout(() => {
+      socket.disconnect();
+      alert('Connection timeout. Please try again.');
+    }, 10000);
+
     socket.on('connect', () => {
       console.log('Socket connected:', socket.id);
       socket.emit('create-game', {
@@ -58,14 +71,17 @@ function TeacherDashboard({ user }) {
     });
 
     socket.on('game-created', (data) => {
+      clearTimeout(connectionTimeout);
       console.log('Game created:', data.gameCode);
       socket.disconnect();
       navigate(`/lobby/${data.gameCode}`);
     });
 
     socket.on('connect_error', (error) => {
+      clearTimeout(connectionTimeout);
       console.error('Socket connection error:', error);
-      alert('Failed to connect to game server. Please try again.');
+      alert('Failed to connect to game server. Please check your connection and try again.');
+      socket.disconnect();
     });
   };
 
