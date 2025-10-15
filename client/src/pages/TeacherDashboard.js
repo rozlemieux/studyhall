@@ -46,29 +46,29 @@ function TeacherDashboard({ user }) {
       return;
     }
 
+    if (creatingGame) {
+      return; // Prevent double clicks
+    }
+
+    setCreatingGame(true);
+
     // Connect to Socket.io - use current host for preview compatibility
-    // In dev: proxies to backend, In preview: needs full URL
-    const socketUrl = process.env.NODE_ENV === 'production' 
-      ? window.location.origin 
-      : undefined; // undefined means same origin (uses proxy)
-    
-    const socket = io(socketUrl, {
+    const socket = io({
       path: '/socket.io',
       transports: ['websocket', 'polling'],
-      reconnection: true,
-      reconnectionAttempts: 3,
+      reconnection: false, // Don't auto-reconnect for game creation
       timeout: 10000
     });
     
     // Set timeout for connection
     const connectionTimeout = setTimeout(() => {
       socket.disconnect();
-      alert('Connection timeout. Please check your internet connection and try again.');
+      setCreatingGame(false);
+      alert('Connection timeout. Please check your connection and try again.');
     }, 15000);
 
     socket.on('connect', () => {
       console.log('✅ Socket connected:', socket.id);
-      clearTimeout(connectionTimeout);
       
       socket.emit('create-game', {
         questionSetId: selectedSet,
@@ -76,11 +76,13 @@ function TeacherDashboard({ user }) {
         settings: {}
       });
       
-      console.log('📤 Sent create-game event');
+      console.log('📤 Sent create-game event for set:', selectedSet, 'mode:', selectedMode);
     });
 
     socket.on('game-created', (data) => {
-      console.log('✅ Game created:', data.gameCode);
+      clearTimeout(connectionTimeout);
+      console.log('✅ Game created successfully:', data.gameCode);
+      setCreatingGame(false);
       socket.disconnect();
       navigate(`/lobby/${data.gameCode}`);
     });
@@ -88,17 +90,16 @@ function TeacherDashboard({ user }) {
     socket.on('connect_error', (error) => {
       clearTimeout(connectionTimeout);
       console.error('❌ Socket connection error:', error);
-      alert('Failed to connect to game server: ' + error.message + '\n\nPlease try again.');
+      setCreatingGame(false);
+      alert('Failed to connect: ' + error.message);
       socket.disconnect();
     });
 
-    socket.on('disconnect', (reason) => {
-      console.log('Socket disconnected:', reason);
-      if (reason === 'io server disconnect' || reason === 'io client disconnect') {
-        // Expected disconnect
-      } else {
-        clearTimeout(connectionTimeout);
-      }
+    socket.on('error', (error) => {
+      clearTimeout(connectionTimeout);
+      console.error('❌ Socket error:', error);
+      setCreatingGame(false);
+      socket.disconnect();
     });
   };
 
