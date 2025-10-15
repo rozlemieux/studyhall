@@ -1,0 +1,168 @@
+.lobby-page {
+  min-height: calc(100vh - 80px);
+  padding: 100px 20px 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.lobby-header {
+  text-align: center;
+  color: white;
+  margin-bottom: 40px;
+}
+
+.lobby-header h1 {
+  font-size: 42px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.game-code-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  background: white;
+  padding: 15px 30px;
+  border-radius: 50px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.code-label {
+  font-weight: 600;
+  color: #666;
+}
+
+.code-value {
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 5px;
+  font-family: 'Courier New', monospace;
+  color: #667eea;
+}
+
+.copy-button {
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.copy-button:hover {
+  transform: scale(1.1);
+  background: #764ba2;
+}
+
+.lobby-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.players-section {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  margin-bottom: 30px;
+}
+
+.players-section h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.player-card {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.player-card:hover {
+  transform: translateY(-5px);
+  border-color: #667eea;
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+}
+
+.player-slime {
+  font-size: 60px;
+  margin-bottom: 10px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.player-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.waiting-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 18px;
+}
+
+.host-controls {
+  text-align: center;
+}
+
+.waiting-host {
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+}
+
+.error-box {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  max-width: 500px;
+  margin: 100px auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.error-box h2 {
+  color: #c33;
+  margin-bottom: 15px;
+}
+
+.error-box p {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+@media (max-width: 768px) {
+  .lobby-header h1 {
+    font-size: 32px;
+  }
+  
+  .code-value {
+    font-size: 24px;
+    letter-spacing: 3px;
+  }
+  
+  .players-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
