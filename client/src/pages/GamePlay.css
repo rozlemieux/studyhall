@@ -1,6 +1,6 @@
 .gameplay-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #00C878 0%, #00E088 100%);
   padding: 20px;
 }
 
@@ -24,7 +24,7 @@
 .timer {
   font-size: 24px;
   font-weight: 700;
-  color: #667eea;
+  color: #00C878;
 }
 
 .timer-warning {
@@ -86,9 +86,9 @@
 }
 
 .answer-button:not(:disabled):hover {
-  border-color: #667eea;
+  border-color: #00C878;
   transform: scale(1.02);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 200, 120, 0.2);
 }
 
 .answer-button:disabled {
@@ -156,14 +156,14 @@
   align-items: center;
   gap: 15px;
   padding: 15px;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(0, 200, 120, 0.1) 0%, rgba(0, 224, 136, 0.1) 100%);
   border-radius: 10px;
   font-weight: 600;
 }
 
 .leaderboard-item .position {
   font-size: 18px;
-  color: #667eea;
+  color: #00C878;
   min-width: 40px;
 }
 
@@ -196,7 +196,7 @@
   font-size: 48px;
   font-weight: 800;
   margin-bottom: 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #00C878 0%, #00E088 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -216,7 +216,7 @@
   padding: 20px 30px;
   background: #f8f9fa;
   border-radius: 15px;
-  border-left: 5px solid #667eea;
+  border-left: 5px solid #00C878;
 }
 
 .rank-card.rank-1 {

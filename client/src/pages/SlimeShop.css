@@ -1,7 +1,7 @@
 .shop-page {
   min-height: calc(100vh - 80px);
   padding: 100px 20px 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #00C878 0%, #00E088 100%);
 }
 
 .shop-header {
@@ -21,7 +21,7 @@
   font-size: 28px;
   font-weight: 700;
   background: white;
-  color: #667eea;
+  color: #00C878;
   padding: 12px 30px;
   border-radius: 50px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);

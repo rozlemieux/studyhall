@@ -46,7 +46,7 @@
   top: 0;
   left: 0;
   height: 100%;
-  background: linear-gradient(to right, rgba(102, 126, 234, 0.3), rgba(102, 126, 234, 0.1));
+  background: linear-gradient(to right, rgba(0, 200, 120, 0.3), rgba(0, 200, 120, 0.1));
   border-radius: 20px;
   transition: width 0.5s ease;
 }
@@ -76,6 +76,6 @@
 .lane-score {
   font-size: 14px;
   font-weight: 700;
-  color: #667eea;
+  color: #00C878;
   text-align: right;
 }

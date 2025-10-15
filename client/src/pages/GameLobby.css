@@ -1,7 +1,7 @@
 .lobby-page {
   min-height: calc(100vh - 80px);
   padding: 100px 20px 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #00C878 0%, #00E088 100%);
 }
 
 .lobby-header {
@@ -37,11 +37,11 @@
   font-weight: 900;
   letter-spacing: 5px;
   font-family: 'Courier New', monospace;
-  color: #667eea;
+  color: #00C878;
 }
 
 .copy-button {
-  background: #667eea;
+  background: #00C878;
   color: white;
   border: none;
   border-radius: 50%;
@@ -54,7 +54,7 @@
 
 .copy-button:hover {
   transform: scale(1.1);
-  background: #764ba2;
+  background: #00E088;
 }
 
 .lobby-content {
@@ -84,7 +84,7 @@
 }
 
 .player-card {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(0, 200, 120, 0.1) 0%, rgba(0, 224, 136, 0.1) 100%);
   border-radius: 15px;
   padding: 20px;
   text-align: center;
@@ -94,8 +94,8 @@
 
 .player-card:hover {
   transform: translateY(-5px);
-  border-color: #667eea;
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+  border-color: #00C878;
+  box-shadow: 0 5px 15px rgba(0, 200, 120, 0.2);
 }
 
 .player-slime {

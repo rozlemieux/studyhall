@@ -1,6 +1,6 @@
 .home-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #00C878 0%, #00E088 100%);
 }
 
 .hero-section {
@@ -70,7 +70,7 @@
 
 .hero-button.primary {
   background: white;
-  color: #667eea;
+  color: #00C878;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
@@ -117,7 +117,7 @@
   font-size: 48px;
   font-weight: 800;
   margin-bottom: 60px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #00C878 0%, #00E088 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -132,7 +132,7 @@
 }
 
 .feature-card {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(0, 200, 120, 0.1) 0%, rgba(0, 224, 136, 0.1) 100%);
   padding: 40px 30px;
   border-radius: 20px;
   text-align: center;
@@ -141,8 +141,8 @@
 }
 
 .feature-card:hover {
-  border-color: #667eea;
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+  border-color: #00C878;
+  box-shadow: 0 10px 30px rgba(0, 200, 120, 0.2);
 }
 
 .feature-icon {
@@ -165,7 +165,7 @@
 
 .cta-section {
   padding: 100px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #00C878 0%, #00E088 100%);
   text-align: center;
 }
 
@@ -191,7 +191,7 @@
   font-size: 18px;
   font-weight: 700;
   background: white;
-  color: #667eea;
+  color: #00C878;
   border: none;
   border-radius: 50px;
   cursor: pointer;
