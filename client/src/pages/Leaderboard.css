@@ -1,0 +1,27 @@
+.leaderboard-table {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.rank {
+  font-size: 24px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.stat {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f39c12;
+  text-align: right;
+}
