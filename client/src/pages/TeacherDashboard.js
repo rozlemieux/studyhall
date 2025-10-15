@@ -11,6 +11,7 @@ function TeacherDashboard({ user }) {
   const [selectedSet, setSelectedSet] = useState('');
   const [selectedMode, setSelectedMode] = useState('classic');
   const [loading, setLoading] = useState(true);
+  const [creatingGame, setCreatingGame] = useState(false);
 
   const gameModes = [
     { id: 'classic', name: 'Classic Quiz', icon: '📚', description: 'Traditional quiz format' },
