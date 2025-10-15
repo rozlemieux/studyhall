@@ -24,7 +24,7 @@ function GamePlay({ user }) {
   const [finalResults, setFinalResults] = useState([]);
 
   useEffect(() => {
-    socket = io('http://localhost:8001');
+    socket = io();
 
     socket.on('game-started', (data) => {
       setGame(data.game);
