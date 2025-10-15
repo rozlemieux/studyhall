@@ -23,7 +23,7 @@ function GameLobby({ user }) {
       .catch(err => console.error('Error fetching player data:', err));
 
     // Connect to socket
-    socket = io('http://localhost:5001');
+    socket = io('http://localhost:8001');
 
     // Join or get game
     if (user.role === 'student') {

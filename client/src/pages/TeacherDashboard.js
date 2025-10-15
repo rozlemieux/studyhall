@@ -45,7 +45,7 @@ function TeacherDashboard({ user }) {
       return;
     }
 
-    const socket = io('http://localhost:5001');
+    const socket = io('http://localhost:8001');
     socket.emit('create-game', {
       questionSetId: selectedSet,
       gameMode: selectedMode,
