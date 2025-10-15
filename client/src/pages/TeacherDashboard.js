@@ -188,10 +188,10 @@ function TeacherDashboard({ user }) {
         >
           <button
             onClick={handleHostGame}
-            disabled={!selectedSet}
+            disabled={!selectedSet || creatingGame}
             className="button button-primary button-large"
           >
-            🚀 Host Game Now
+            {creatingGame ? '⏳ Creating Game...' : '🚀 Host Game Now'}
           </button>
         </motion.div>
 
