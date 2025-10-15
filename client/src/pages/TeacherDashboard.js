@@ -45,43 +45,59 @@ function TeacherDashboard({ user }) {
       return;
     }
 
-    // Show loading state
-    const originalButtonText = 'Host Game Now';
+    // Connect to Socket.io - use current host for preview compatibility
+    // In dev: proxies to backend, In preview: needs full URL
+    const socketUrl = process.env.NODE_ENV === 'production' 
+      ? window.location.origin 
+      : undefined; // undefined means same origin (uses proxy)
     
-    // Connect to Socket.io using the same origin (will be proxied)
-    const socket = io({
-      transports: ['polling', 'websocket'],
+    const socket = io(socketUrl, {
+      path: '/socket.io',
+      transports: ['websocket', 'polling'],
       reconnection: true,
-      reconnectionAttempts: 3
+      reconnectionAttempts: 3,
+      timeout: 10000
     });
     
     // Set timeout for connection
     const connectionTimeout = setTimeout(() => {
       socket.disconnect();
-      alert('Connection timeout. Please try again.');
-    }, 10000);
+      alert('Connection timeout. Please check your internet connection and try again.');
+    }, 15000);
 
     socket.on('connect', () => {
-      console.log('Socket connected:', socket.id);
+      console.log('✅ Socket connected:', socket.id);
+      clearTimeout(connectionTimeout);
+      
       socket.emit('create-game', {
         questionSetId: selectedSet,
         gameMode: selectedMode,
         settings: {}
       });
+      
+      console.log('📤 Sent create-game event');
     });
 
     socket.on('game-created', (data) => {
-      clearTimeout(connectionTimeout);
-      console.log('Game created:', data.gameCode);
+      console.log('✅ Game created:', data.gameCode);
       socket.disconnect();
       navigate(`/lobby/${data.gameCode}`);
     });
 
     socket.on('connect_error', (error) => {
       clearTimeout(connectionTimeout);
-      console.error('Socket connection error:', error);
-      alert('Failed to connect to game server. Please check your connection and try again.');
+      console.error('❌ Socket connection error:', error);
+      alert('Failed to connect to game server: ' + error.message + '\n\nPlease try again.');
       socket.disconnect();
+    });
+
+    socket.on('disconnect', (reason) => {
+      console.log('Socket disconnected:', reason);
+      if (reason === 'io server disconnect' || reason === 'io client disconnect') {
+        // Expected disconnect
+      } else {
+        clearTimeout(connectionTimeout);
+      }
     });
   };
 
