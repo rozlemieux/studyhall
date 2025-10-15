@@ -1,0 +1,123 @@
+.battle-game {
+  padding: 10px;
+}
+
+.battle-game h3 {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.battle-arena {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.battle-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.battle-card.ko {
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+
+.battle-slime {
+  position: relative;
+  font-size: 48px;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.attack-effect {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 24px;
+  animation: attack 0.5s ease-out;
+}
+
+@keyframes attack {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.5); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+.battle-info {
+  flex: 1;
+}
+
+.battle-name {
+  color: white;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.hp-bar {
+  position: relative;
+  height: 25px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.hp-fill {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.5s ease, background-color 0.3s ease;
+  border-radius: 10px;
+}
+
+.hp-fill.hp-high {
+  background: linear-gradient(to right, #2ecc71, #27ae60);
+}
+
+.hp-fill.hp-medium {
+  background: linear-gradient(to right, #f39c12, #e67e22);
+}
+
+.hp-fill.hp-low {
+  background: linear-gradient(to right, #e74c3c, #c0392b);
+}
+
+.hp-text {
+  color: white;
+  font-weight: 700;
+  font-size: 12px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.ko-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  font-weight: 900;
+  color: #e74c3c;
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+  animation: koAppear 0.5s ease-out;
+}
+
+@keyframes koAppear {
+  0% { transform: translate(-50%, -50%) scale(0) rotate(-45deg); }
+  50% { transform: translate(-50%, -50%) scale(1.2) rotate(5deg); }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+}
