@@ -172,7 +172,7 @@ function SlimeShop({ user }) {
                   className={`slime-card ${owned ? 'owned' : 'locked'} ${selected ? 'selected' : ''} rarity-${slime.rarity}`}
                 >
                   <div className="slime-display">
-                    {owned ? getSlimeDisplay(slime.id) : '🔒'}
+                    {owned ? <Slime slimeId={slime.id} size={80} /> : '🔒'}
                   </div>
                   <div className="slime-name">{slime.name}</div>
                   <div className="slime-rarity">{slime.rarity}</div>
