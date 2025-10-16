@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { getSlimeDisplay } from '../utils/slimeSprites';
+import Slime from '../components/Slime';
 import './Dashboard.css';
 
 function StudentDashboard({ user }) {
