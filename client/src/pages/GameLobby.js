@@ -138,7 +138,9 @@ function GameLobby({ user }) {
                   transition={{ delay: index * 0.1 }}
                   className="player-card"
                 >
-                  <div className="player-slime">{getSlimeDisplay(player.slime)}</div>
+                  <div className="player-slime">
+                    <Slime slimeId={player.slime} size={70} />
+                  </div>
                   <div className="player-name">{player.username}</div>
                 </motion.div>
               ))}
