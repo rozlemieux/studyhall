@@ -1,5 +1,5 @@
 import React from 'react';
-import { getSlimeDisplay } from '../../utils/slimeSprites';
+import Slime from '../../components/Slime';
 import './BattleGame.css';
 
 function BattleGame({ players, currentPlayer, questionNumber, totalQuestions }) {
@@ -18,7 +18,7 @@ function BattleGame({ players, currentPlayer, questionNumber, totalQuestions }) 
           return (
             <div key={player.id} className={`battle-card ${isKO ? 'ko' : ''}`}>
               <div className="battle-slime">
-                {getSlimeDisplay(player.slime)}
+                <Slime slimeId={player.slime} size={60} />
                 {!isKO && player.score > 0 && <span className="attack-effect">⚡</span>}
               </div>
               <div className="battle-info">

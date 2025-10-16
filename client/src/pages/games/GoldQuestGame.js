@@ -1,5 +1,5 @@
 import React from 'react';
-import { getSlimeDisplay } from '../../utils/slimeSprites';
+import Slime from '../../components/Slime';
 import './GoldQuestGame.css';
 
 function GoldQuestGame({ players, currentPlayer, questionNumber, totalQuestions }) {
@@ -33,7 +33,7 @@ function GoldQuestGame({ players, currentPlayer, questionNumber, totalQuestions 
             <div key={player.id} className="treasure-card">
               {rankBadge && <div className="rank-badge">{rankBadge}</div>}
               <div className="treasure-slime">
-                {getSlimeDisplay(player.slime)}
+                <Slime slimeId={player.slime} size={60} />
               </div>
               <div className="treasure-info">
                 <div className="treasure-name">{player.username}</div>
