@@ -1,5 +1,5 @@
 import React from 'react';
-import { getSlimeDisplay } from '../../utils/slimeSprites';
+import Slime from '../../components/Slime';
 import './RacingGame.css';
 
 function RacingGame({ players, currentPlayer, questionNumber, totalQuestions }) {
