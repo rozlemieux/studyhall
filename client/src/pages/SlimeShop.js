@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { getSlimeDisplay, getSlimeName } from '../utils/slimeSprites';
+import Slime from '../components/Slime';
+import { getSlimeName } from '../utils/slimeSprites';
 import './SlimeShop.css';
 
 function SlimeShop({ user }) {
