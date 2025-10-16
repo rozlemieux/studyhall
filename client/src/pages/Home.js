@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './Home.css';
-import { getSlimeDisplay } from '../utils/slimeSprites';
+import Slime from '../components/Slime';
 
 function Home() {
   const slimes = ['mint', 'cherry', 'fire', 'water', 'rainbow', 'galaxy', 'golden', 'dragon'];
