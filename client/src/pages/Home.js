@@ -47,7 +47,7 @@ function Home() {
                 animationDelay: `${index * 0.3}s`
               }}
             >
-              <span className="slime-emoji">{getSlimeDisplay(slime)}</span>
+              <Slime slimeId={slime} size={80} />
             </motion.div>
           ))}
         </div>
