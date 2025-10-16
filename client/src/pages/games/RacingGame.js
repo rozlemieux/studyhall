@@ -17,7 +17,7 @@ function RacingGame({ players, currentPlayer, questionNumber, totalQuestions }) 
               <div className="lane-track">
                 <div className="track-progress" style={{ width: `${cappedProgress}%` }}>
                   <div className="racer-slime" style={{ left: '100%' }}>
-                    {getSlimeDisplay(player.slime)}
+                    <Slime slimeId={player.slime} size={40} />
                   </div>
                 </div>
                 <div className="finish-line">🏁</div>
