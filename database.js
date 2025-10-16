@@ -2,9 +2,18 @@
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 const path = require('path');
+const fs = require('fs');
+
+// Determine database path based on environment
+// In production (Render), use /data directory with mounted disk
+// In development, use local directory
+const dbPath = process.env.NODE_ENV === 'production' && fs.existsSync('/data')
+  ? path.join('/data', 'studyhall.db')
+  : path.join(__dirname, 'studyhall.db');
+
+console.log(`Using database at: ${dbPath}`);
 
 // Create/open database
-const dbPath = path.join(__dirname, 'studyhall.db');
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error opening database:', err);
