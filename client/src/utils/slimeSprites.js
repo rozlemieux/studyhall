@@ -1,62 +1,63 @@
 // Slime sprite data for StudyHall
 // 37 unique slimes: 30 regular + 7 secret
+// Now with SVG colors instead of emojis!
 
 export const slimeSprites = {
   // COMMON - Basic flavors (6 slimes)
-  mint: { emoji: '🟢', name: 'Mint Slime', color: '#7bed9f' },
-  cherry: { emoji: '🍒', name: 'Cherry Slime', color: '#ff6b6b' },
-  blueberry: { emoji: '🫐', name: 'Blueberry Slime', color: '#4834df' },
-  orange: { emoji: '🍊', name: 'Orange Slime', color: '#ff9f43' },
-  chocolate: { emoji: '🍫', name: 'Chocolate Slime', color: '#8B4513' },
-  watermelon: { emoji: '🍉', name: 'Watermelon Slime', color: '#ff6b81' },
+  mint: { color: '#7FD957', name: 'Mint Slime', rarity: 'common' },
+  cherry: { color: '#FF6B6B', name: 'Cherry Slime', rarity: 'common' },
+  blueberry: { color: '#4834DF', name: 'Blueberry Slime', rarity: 'common' },
+  orange: { color: '#FF9F43', name: 'Orange Slime', rarity: 'common' },
+  chocolate: { color: '#8B4513', name: 'Chocolate Slime', rarity: 'common' },
+  watermelon: { color: '#FF6B81', name: 'Watermelon Slime', rarity: 'common' },
   
   // UNCOMMON - Elements (6 slimes)
-  fire: { emoji: '🔥', name: 'Fire Slime', color: '#ff4757' },
-  water: { emoji: '💧', name: 'Water Slime', color: '#1e90ff' },
-  ice: { emoji: '🧊', name: 'Ice Slime', color: '#70a1ff' },
-  lightning: { emoji: '⚡', name: 'Lightning Slime', color: '#ffd700' },
-  forest: { emoji: '🌲', name: 'Forest Slime', color: '#2ed573' },
-  ocean: { emoji: '🌊', name: 'Ocean Slime', color: '#3742fa' },
+  fire: { color: '#FF4757', name: 'Fire Slime', rarity: 'uncommon' },
+  water: { color: '#1E90FF', name: 'Water Slime', rarity: 'uncommon' },
+  ice: { color: '#70A1FF', name: 'Ice Slime', rarity: 'uncommon' },
+  lightning: { color: '#FFD700', name: 'Lightning Slime', rarity: 'uncommon' },
+  forest: { color: '#2ED573', name: 'Forest Slime', rarity: 'uncommon' },
+  ocean: { color: '#3742FA', name: 'Ocean Slime', rarity: 'uncommon' },
   
   // RARE - Special patterns (6 slimes)
-  rainbow: { emoji: '🌈', name: 'Rainbow Slime', color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-  midnight: { emoji: '🌙', name: 'Midnight Slime', color: '#2c3e50' },
-  sakura: { emoji: '🌸', name: 'Sakura Slime', color: '#ffb7b2' },
-  pumpkin: { emoji: '🎃', name: 'Pumpkin Slime', color: '#ff7f50' },
-  honey: { emoji: '🍯', name: 'Honey Slime', color: '#f39c12' },
-  coral: { emoji: '🪸', name: 'Coral Slime', color: '#ff6b9d' },
+  rainbow: { color: 'url(#rainbow-gradient)', name: 'Rainbow Slime', rarity: 'rare', isGradient: true },
+  midnight: { color: '#2C3E50', name: 'Midnight Slime', rarity: 'rare' },
+  sakura: { color: '#FFB7B2', name: 'Sakura Slime', rarity: 'rare' },
+  pumpkin: { color: '#FF7F50', name: 'Pumpkin Slime', rarity: 'rare' },
+  honey: { color: '#F39C12', name: 'Honey Slime', rarity: 'rare' },
+  coral: { color: '#FF6B9D', name: 'Coral Slime', rarity: 'rare' },
   
   // EPIC - Gems (5 slimes)
-  ruby: { emoji: '💎', name: 'Ruby Slime', color: '#e74c3c' },
-  sapphire: { emoji: '💠', name: 'Sapphire Slime', color: '#3498db' },
-  emerald: { emoji: '✨', name: 'Emerald Slime', color: '#2ecc71' },
-  amethyst: { emoji: '💜', name: 'Amethyst Slime', color: '#9b59b6' },
-  opal: { emoji: '🔮', name: 'Opal Slime', color: '#e8daef' },
+  ruby: { color: '#E74C3C', name: 'Ruby Slime', rarity: 'epic' },
+  sapphire: { color: '#3498DB', name: 'Sapphire Slime', rarity: 'epic' },
+  emerald: { color: '#2ECC71', name: 'Emerald Slime', rarity: 'epic' },
+  amethyst: { color: '#9B59B6', name: 'Amethyst Slime', rarity: 'epic' },
+  opal: { color: '#E8DAEF', name: 'Opal Slime', rarity: 'epic' },
   
   // LEGENDARY - Cosmic (4 slimes)
-  galaxy: { emoji: '🌌', name: 'Galaxy Slime', color: 'linear-gradient(135deg, #4a00e0 0%, #8e2de2 100%)' },
-  nebula: { emoji: '☄️', name: 'Nebula Slime', color: 'linear-gradient(135deg, #ee0979 0%, #ff6a00 100%)' },
-  aurora: { emoji: '🌅', name: 'Aurora Slime', color: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)' },
-  golden: { emoji: '🌟', name: 'Golden Slime', color: 'linear-gradient(135deg, #f7971e 0%, #ffd200 100%)' },
+  galaxy: { color: 'url(#galaxy-gradient)', name: 'Galaxy Slime', rarity: 'legendary', isGradient: true },
+  nebula: { color: 'url(#nebula-gradient)', name: 'Nebula Slime', rarity: 'legendary', isGradient: true },
+  aurora: { color: 'url(#aurora-gradient)', name: 'Aurora Slime', rarity: 'legendary', isGradient: true },
+  golden: { color: 'url(#golden-gradient)', name: 'Golden Slime', rarity: 'legendary', isGradient: true },
   
   // MYTHIC - Legendary creatures (3 slimes)
-  phoenix: { emoji: '🔥', name: 'Phoenix Slime', color: 'linear-gradient(135deg, #ff0844 0%, #ffb199 100%)' },
-  dragon: { emoji: '🐉', name: 'Dragon Slime', color: 'linear-gradient(135deg, #ff0000 0%, #8b0000 100%)' },
-  ghost: { emoji: '👻', name: 'Ghost Slime', color: '#ecf0f1' },
+  phoenix: { color: 'url(#phoenix-gradient)', name: 'Phoenix Slime', rarity: 'mythic', isGradient: true },
+  dragon: { color: '#8B0000', name: 'Dragon Slime', rarity: 'mythic' },
+  ghost: { color: '#ECF0F1', name: 'Ghost Slime', rarity: 'mythic' },
   
   // SECRET - Ultimate rares (7 slimes)
-  unicorn: { emoji: '🦄', name: 'Unicorn Slime', color: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
-  king: { emoji: '👑', name: 'King Slime', color: 'linear-gradient(135deg, #ffd700 0%, #ffed4e 100%)' },
-  queen: { emoji: '👸', name: 'Queen Slime', color: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)' },
-  wizard: { emoji: '🧙', name: 'Wizard Slime', color: 'linear-gradient(135deg, #5f2c82 0%, #49a09d 100%)' },
-  knight: { emoji: '⚔️', name: 'Knight Slime', color: 'linear-gradient(135deg, #8e9eab 0%, #eef2f3 100%)' },
-  ninja: { emoji: '🥷', name: 'Ninja Slime', color: '#2c3e50' },
-  tako: { emoji: '🌮', name: 'Tako Slime', color: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }
+  unicorn: { color: 'url(#unicorn-gradient)', name: 'Unicorn Slime', rarity: 'secret', isGradient: true },
+  king: { color: '#FFD700', name: 'King Slime', rarity: 'secret' },
+  queen: { color: '#FFC0CB', name: 'Queen Slime', rarity: 'secret' },
+  wizard: { color: '#5F2C82', name: 'Wizard Slime', rarity: 'secret' },
+  knight: { color: '#8E9EAB', name: 'Knight Slime', rarity: 'secret' },
+  ninja: { color: '#2C3E50', name: 'Ninja Slime', rarity: 'secret' },
+  tako: { color: 'url(#tako-gradient)', name: 'Tako Slime', rarity: 'secret', isGradient: true }
 };
 
-export const getSlimeDisplay = (slimeId) => {
+export const getSlimeColor = (slimeId) => {
   const slime = slimeSprites[slimeId] || slimeSprites.mint;
-  return slime.emoji;
+  return slime.color;
 };
 
 export const getSlimeName = (slimeId) => {
@@ -64,7 +65,28 @@ export const getSlimeName = (slimeId) => {
   return slime.name;
 };
 
-export const getSlimeColor = (slimeId) => {
+export const getSlimeRarity = (slimeId) => {
   const slime = slimeSprites[slimeId] || slimeSprites.mint;
-  return slime.color;
+  return slime.rarity;
 };
+
+// Get emoji fallback for backwards compatibility
+export const getSlimeEmoji = (slimeId) => {
+  const emojiMap = {
+    mint: '🟢', cherry: '🍒', blueberry: '🫐', orange: '🍊',
+    chocolate: '🍫', watermelon: '🍉', fire: '🔥', water: '💧',
+    ice: '🧊', lightning: '⚡', forest: '🌲', ocean: '🌊',
+    rainbow: '🌈', midnight: '🌙', sakura: '🌸', pumpkin: '🎃',
+    honey: '🍯', coral: '🪸', ruby: '💎', sapphire: '💠',
+    emerald: '✨', amethyst: '💜', opal: '🔮', galaxy: '🌌',
+    nebula: '☄️', aurora: '🌅', golden: '🌟', phoenix: '🔥',
+    dragon: '🐉', ghost: '👻', unicorn: '🦄', king: '👑',
+    queen: '👸', wizard: '🧙', knight: '⚔️', ninja: '🥷',
+    tako: '🌮'
+  };
+  return emojiMap[slimeId] || '🟢';
+};
+
+// Legacy function - now returns emoji
+export const getSlimeDisplay = getSlimeEmoji;
+
