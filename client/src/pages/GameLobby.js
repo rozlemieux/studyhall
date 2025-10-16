@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { motion } from 'framer-motion';
-import { getSlimeDisplay } from '../utils/slimeSprites';
+import Slime from '../components/Slime';
 import './GameLobby.css';
 
 let socket;
