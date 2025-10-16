@@ -8,7 +8,7 @@ import BattleGame from './games/BattleGame';
 import GoldQuestGame from './games/GoldQuestGame';
 import './GamePlay.css';
 
-const socket = io('http://localhost:5001');
+const socket = io();
 
 function GamePlay({ user }) {
   const { gameCode } = useParams();

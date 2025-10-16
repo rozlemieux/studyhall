@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 import Icon from '../components/Icon';
 import './TeacherDashboard.css';
 
-const socket = io('http://localhost:5001');
+const socket = io();
 
 function TeacherDashboard({ user }) {
   const [questionSets, setQuestionSets] = useState([]);

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { getSlimeSprite, getSlimeColor } from '../utils/slimeSprites';
 import './GameLobby.css';
 
-const socket = io('http://localhost:5001');
+const socket = io();
 
 function GameLobby({ user }) {
   const { gameCode } = useParams();

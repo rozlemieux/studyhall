@@ -7,7 +7,7 @@ import Icon from '../components/Icon';
 import { getSlimeSprite } from '../utils/slimeSprites';
 import './StudentDashboard.css';
 
-const socket = io('http://localhost:5001');
+const socket = io();
 
 function StudentDashboard({ user }) {
   const [gameCode, setGameCode] = useState('');
