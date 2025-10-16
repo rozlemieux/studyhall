@@ -1,0 +1,13 @@
+.question-block {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.answer-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}

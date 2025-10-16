@@ -2,85 +2,101 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { motion } from 'framer-motion';
+import { getSlimeSprite } from '../utils/slimeSprites';
 import RacingGame from './games/RacingGame';
 import BattleGame from './games/BattleGame';
 import GoldQuestGame from './games/GoldQuestGame';
 import './GamePlay.css';
 
-let socket;
+const socket = io('http://localhost:5001');
 
 function GamePlay({ user }) {
   const { gameCode } = useParams();
-  const navigate = useNavigate();
-  const [game, setGame] = useState(null);
-  const [question, setQuestion] = useState(null);
+  const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionNumber, setQuestionNumber] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(20);
-  const [answered, setAnswered] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [isCorrect, setIsCorrect] = useState(null);
+  const [answered, setAnswered] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(20);
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  const [players, setPlayers] = useState([]);
   const [gameFinished, setGameFinished] = useState(false);
-  const [finalResults, setFinalResults] = useState([]);
+  const [gameMode, setGameMode] = useState('classic');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    socket = io();
-
     socket.on('game-started', (data) => {
-      setGame(data.game);
-      setQuestion(data.question);
+      setCurrentQuestion(data.question);
       setQuestionNumber(data.questionNumber);
       setTotalQuestions(data.totalQuestions);
+      setGameMode(data.gameMode || 'classic');
       setTimeLeft(20);
+      setTimeElapsed(0);
       setAnswered(false);
       setSelectedAnswer(null);
-      setIsCorrect(null);
     });
 
     socket.on('next-question', (data) => {
-      setQuestion(data.question);
+      setCurrentQuestion(data.question);
       setQuestionNumber(data.questionNumber);
       setTotalQuestions(data.totalQuestions);
       setTimeLeft(20);
+      setTimeElapsed(0);
       setAnswered(false);
       setSelectedAnswer(null);
-      setIsCorrect(null);
     });
 
     socket.on('answer-submitted', (data) => {
-      if (data.playerId === socket.id) {
-        setIsCorrect(data.correct);
-      }
-      // Update players with new scores
-      if (game) {
-        setGame({ ...game, players: data.players });
-      }
+      setPlayers(data.players);
     });
 
     socket.on('game-finished', (data) => {
+      setPlayers(data.players);
       setGameFinished(true);
-      setFinalResults(data.players);
     });
 
     return () => {
-      socket.disconnect();
+      socket.off('game-started');
+      socket.off('next-question');
+      socket.off('answer-submitted');
+      socket.off('game-finished');
     };
-  }, [gameCode]);
+  }, []);
 
   useEffect(() => {
-    if (timeLeft > 0 && !answered && question) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [timeLeft, answered, question]);
+    if (answered || timeLeft <= 0) return;
 
-  const handleAnswer = (answerIndex) => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          handleTimeout();
+          return 0;
+        }
+        return prev - 1;
+      });
+      setTimeElapsed((prev) => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [answered, timeLeft]);
+
+  const handleTimeout = () => {
+    if (!answered) {
+      setAnswered(true);
+      socket.emit('submit-answer', {
+        gameCode,
+        answer: -1,
+        timeElapsed: 20
+      });
+    }
+  };
+
+  const handleAnswerSelect = (answerIndex) => {
     if (answered) return;
-    
-    setAnswered(true);
+
     setSelectedAnswer(answerIndex);
+    setAnswered(true);
     
-    const timeElapsed = 20 - timeLeft;
     socket.emit('submit-answer', {
       gameCode,
       answer: answerIndex,
@@ -88,42 +104,80 @@ function GamePlay({ user }) {
     });
   };
 
-  const handleNextQuestion = () => {
-    socket.emit('next-question', { gameCode });
-  };
+  // Render game mode visualization
+  const renderGameModeView = () => {
+    const currentPlayer = players.find(p => p.id === user.id);
+    const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
 
-  const handlePlayAgain = () => {
-    navigate(user.role === 'teacher' ? '/teacher-dashboard' : '/student-dashboard');
+    switch (gameMode) {
+      case 'racing':
+        return <RacingGame players={sortedPlayers} currentPlayer={currentPlayer} questionNumber={questionNumber} totalQuestions={totalQuestions} />;
+      case 'battle':
+        return <BattleGame players={sortedPlayers} currentPlayer={currentPlayer} questionNumber={questionNumber} totalQuestions={totalQuestions} />;
+      case 'gold-quest':
+        return <GoldQuestGame players={sortedPlayers} currentPlayer={currentPlayer} questionNumber={questionNumber} totalQuestions={totalQuestions} />;
+      case 'tower':
+      case 'survival':
+      default:
+        // Classic mode or fallback
+        return (
+          <div className="classic-scoreboard">
+            <h3>Current Standings</h3>
+            <div className="score-list">
+              {sortedPlayers.map((player, index) => (
+                <div key={player.id} className="score-item">
+                  <span className="score-rank">#{index + 1}</span>
+                  <img src={getSlimeSprite(player.slime)} alt={player.username} className="score-slime slime-sprite-tiny" />
+                  <span className="score-name">{player.username}</span>
+                  <span className="score-points">{player.score}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+    }
   };
 
   if (gameFinished) {
     return (
-      <div className="gameplay-page">
-        <div className="container">
+      <div className="game-page">
+        <div className="game-container">
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
             className="results-screen"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
           >
-            <h1>🏆 Game Over!</h1>
-            <div className="final-rankings">
-              {finalResults.map((player, index) => (
+            <h1 className="results-title">🎉 Game Complete! 🎉</h1>
+            <div className="leaderboard">
+              <h2>Final Scores</h2>
+              {players.map((player, index) => (
                 <motion.div
                   key={player.id}
-                  initial={{ opacity: 0, x: -20 }}
+                  className={`leaderboard-item rank-${index + 1}`}
+                  initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`rank-card rank-${index + 1}`}
+                  transition={{ delay: index * 0.2 }}
                 >
-                  <div className="rank-position">
-                    {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
+                  <div className="rank-badge">#{index + 1}</div>
+                  <div className="player-avatar">
+                    <img 
+                      src={getSlimeSprite(player.slime)} 
+                      alt={player.slime}
+                      className="slime-sprite-small"
+                    />
                   </div>
-                  <div className="rank-player">{player.username}</div>
-                  <div className="rank-score">{player.score} pts</div>
+                  <div className="player-details">
+                    <div className="player-username">{player.username}</div>
+                    <div className="player-score">{player.score} points</div>
+                  </div>
+                  {index === 0 && <div className="trophy">👑</div>}
                 </motion.div>
               ))}
             </div>
-            <button onClick={handlePlayAgain} className="button button-primary button-large">
+            <button
+              className="button button-primary back-home-btn"
+              onClick={() => navigate(user.role === 'teacher' ? '/teacher' : '/student')}
+            >
               Back to Dashboard
             </button>
           </motion.div>
@@ -132,123 +186,81 @@ function GamePlay({ user }) {
     );
   }
 
-  if (!question || !game) {
+  if (!currentQuestion) {
     return (
-      <div className="gameplay-page">
-        <div className="loading">
-          <div className="spinner"></div>
-          <p>Loading game...</p>
+      <div className="game-page">
+        <div className="game-container">
+          <div className="loading-screen">
+            <div className="loading-slime">
+              <img 
+                src={getSlimeSprite('mint')} 
+                alt="loading"
+                className="slime-sprite"
+              />
+            </div>
+            <p>Loading game...</p>
+          </div>
         </div>
       </div>
     );
   }
 
-  const currentPlayer = game.players.find(p => p.username === user.username);
-  const gameMode = game.gameMode || 'classic';
-
   return (
-    <div className="gameplay-page">
-      <div className="game-header">
-        <div className="question-info">
-          <span>Question {questionNumber}/{totalQuestions}</span>
+    <div className="game-page">
+      <div className="game-container">
+        <div className="game-header">
+          <div className="question-progress">
+            Question {questionNumber} of {totalQuestions}
+          </div>
+          <div className={`timer ${timeLeft <= 5 ? 'urgent' : ''}`}>
+            <span className="timer-icon">⏱️</span>
+            <span className="timer-value">{timeLeft}s</span>
+          </div>
         </div>
-        <div className="timer">
-          <span className={timeLeft <= 5 ? 'timer-warning' : ''}>⏱️ {timeLeft}s</span>
+
+        <motion.div
+          className="question-card"
+          key={questionNumber}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h2 className="question-text">{currentQuestion.question}</h2>
+          <div className="answers-grid">
+            {currentQuestion.answers.map((answer, index) => (
+              <motion.button
+                key={index}
+                className={`answer-button ${
+                  answered && index === selectedAnswer
+                    ? index === currentQuestion.correct
+                      ? 'correct'
+                      : 'incorrect'
+                    : ''
+                } ${answered && index === currentQuestion.correct ? 'show-correct' : ''}`}
+                onClick={() => handleAnswerSelect(index)}
+                disabled={answered}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={!answered ? { scale: 1.05 } : {}}
+                whileTap={!answered ? { scale: 0.95 } : {}}
+              >
+                <span className="answer-letter">
+                  {String.fromCharCode(65 + index)}
+                </span>
+                <span className="answer-text">{answer}</span>
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Game mode visualization */}
+        <div className="game-mode-container">
+          {renderGameModeView()}
         </div>
       </div>
-
-      <div className="game-content">
-        <div className="question-section">
-          <motion.div
-            key={questionNumber}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="question-card"
-          >
-            <h2 className="question-text">{question.question}</h2>
-            <div className="answers-grid">
-              {question.answers.map((answer, index) => (
-                <motion.button
-                  key={index}
-                  whileHover={!answered ? { scale: 1.02 } : {}}
-                  whileTap={!answered ? { scale: 0.98 } : {}}
-                  onClick={() => handleAnswer(index)}
-                  disabled={answered}
-                  className={`answer-button ${
-                    answered && selectedAnswer === index
-                      ? isCorrect
-                        ? 'correct'
-                        : 'incorrect'
-                      : ''
-                  } ${
-                    answered && index === question.correct ? 'show-correct' : ''
-                  }`}
-                >
-                  {answer}
-                </motion.button>
-              ))}
-            </div>
-            {answered && (
-              <div className={`feedback ${isCorrect ? 'correct-feedback' : 'incorrect-feedback'}`}>
-                {isCorrect ? '✅ Correct!' : '❌ Incorrect'}
-              </div>
-            )}
-          </motion.div>
-        </div>
-
-        <div className="game-visualization">
-          {gameMode === 'racing' && (
-            <RacingGame
-              players={game.players}
-              currentPlayer={currentPlayer}
-              questionNumber={questionNumber}
-              totalQuestions={totalQuestions}
-            />
-          )}
-          {gameMode === 'battle' && (
-            <BattleGame
-              players={game.players}
-              currentPlayer={currentPlayer}
-              questionNumber={questionNumber}
-              totalQuestions={totalQuestions}
-            />
-          )}
-          {gameMode === 'gold-quest' && (
-            <GoldQuestGame
-              players={game.players}
-              currentPlayer={currentPlayer}
-              questionNumber={questionNumber}
-              totalQuestions={totalQuestions}
-            />
-          )}
-          {(gameMode === 'classic' || gameMode === 'tower' || gameMode === 'survival') && (
-            <div className="classic-leaderboard">
-              <h3>Leaderboard</h3>
-              <div className="leaderboard-list">
-                {game.players
-                  .sort((a, b) => b.score - a.score)
-                  .map((player, index) => (
-                    <div key={player.id} className="leaderboard-item">
-                      <span className="position">#{index + 1}</span>
-                      <span className="player-name">{player.username}</span>
-                      <span className="score">{player.score}</span>
-                    </div>
-                  ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {user.role === 'teacher' && answered && (
-        <div className="teacher-controls">
-          <button onClick={handleNextQuestion} className="button button-primary">
-            Next Question ➡️
-          </button>
-        </div>
-      )}
     </div>
   );
 }
 
 export default GamePlay;
+

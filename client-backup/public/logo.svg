@@ -1,0 +1,74 @@
+<svg viewBox="0 0 320 90" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Slime gradient -->
+    <linearGradient id="slimeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#7FD957;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#00FA9A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00E088;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Text gradient -->
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#00FA9A;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#00C878;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00FA9A;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Drop shadow -->
+    <filter id="dropShadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Slime Character -->
+  <g filter="url(#dropShadow)">
+    <!-- Main body -->
+    <ellipse cx="45" cy="50" rx="35" ry="30" fill="url(#slimeGradient)"/>
+    
+    <!-- Shine highlight -->
+    <ellipse cx="35" cy="40" rx="12" ry="15" fill="rgba(255,255,255,0.4)"/>
+    
+    <!-- Left eye -->
+    <ellipse cx="35" cy="45" rx="5" ry="8" fill="#2C3E50"/>
+    <ellipse cx="36" cy="43" rx="2" ry="3" fill="white"/>
+    
+    <!-- Right eye -->
+    <ellipse cx="52" cy="45" rx="5" ry="8" fill="#2C3E50"/>
+    <ellipse cx="53" cy="43" rx="2" ry="3" fill="white"/>
+    
+    <!-- Smile -->
+    <path d="M 38 55 Q 43 60 48 55" stroke="#2C3E50" stroke-width="2" fill="none" stroke-linecap="round"/>
+    
+    <!-- Blush left -->
+    <ellipse cx="28" cy="52" rx="4" ry="3" fill="#FF9AA2" opacity="0.6"/>
+    
+    <!-- Blush right -->
+    <ellipse cx="59" cy="52" rx="4" ry="3" fill="#FF9AA2" opacity="0.6"/>
+  </g>
+  
+  <!-- Floating drops -->
+  <ellipse cx="15" cy="25" rx="4" ry="5" fill="url(#slimeGradient)" opacity="0.7"/>
+  <ellipse cx="70" cy="20" rx="3" ry="4" fill="url(#slimeGradient)" opacity="0.7"/>
+  <ellipse cx="75" cy="55" rx="3" ry="4" fill="url(#slimeGradient)" opacity="0.7"/>
+  
+  <!-- STUDYHALL Text -->
+  <text x="95" y="52" font-family="Arial Black, Arial, sans-serif" font-size="38" font-weight="900" fill="url(#textGradient)" stroke="#0F7A5C" stroke-width="2">STUDYHALL</text>
+  
+  <!-- Sparkles -->
+  <g fill="#FFD700">
+    <path d="M 290 25 l 2 6 l 6 2 l -6 2 l -2 6 l -2 -6 l -6 -2 l 6 -2 z" opacity="0.8"/>
+    <path d="M 305 15 l 1.5 4 l 4 1.5 l -4 1.5 l -1.5 4 l -1.5 -4 l -4 -1.5 l 4 -1.5 z" opacity="0.9"/>
+    <path d="M 300 40 l 1 3 l 3 1 l -3 1 l -1 3 l -1 -3 l -3 -1 l 3 -1 z" opacity="0.7"/>
+  </g>
+  
+  <!-- Tagline -->
+  <text x="95" y="72" font-family="Arial, sans-serif" font-size="10" fill="#00C878" letter-spacing="2">LEARN • PLAY • GROW</text>
+</svg>

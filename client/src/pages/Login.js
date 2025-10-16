@@ -1,120 +1,147 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
+import Icon from '../components/Icon';
+import { getSlimeSprite } from '../utils/slimeSprites';
 import './Login.css';
 
 function Login({ onLogin }) {
-  const [isRegister, setIsRegister] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('student');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isRegister, setIsRegister] = useState(true);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setLoading(true);
-
+    
+    if (isRegister && password !== confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+    
+    if (isRegister && password.length < 6) {
+      alert('Password must be at least 6 characters long!');
+      return;
+    }
+    
     try {
       const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
-      const payload = isRegister ? { username, password, role } : { username, password };
-      
-      const response = await axios.post(endpoint, payload);
+      const data = isRegister ? { username, password, role } : { username, password };
+      const response = await axios.post(endpoint, data);
       onLogin(response.data);
-    } catch (err) {
-      setError(err.response?.data?.error || 'An error occurred');
-    } finally {
-      setLoading(false);
+      
+      if (response.data.role === 'teacher') {
+        navigate('/teacher');
+      } else {
+        navigate('/student');
+      }
+    } catch (error) {
+      console.error('Authentication error:', error);
+      alert(error.response?.data?.error || 'Authentication failed');
     }
   };
 
   return (
     <div className="login-page">
       <motion.div
+        className="login-container"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="login-container"
+        transition={{ duration: 0.6 }}
       >
-        <div className="login-card">
-          <h1 className="login-title">
-            {isRegister ? '📝 Create Account' : '🎮 Welcome Back!'}
-          </h1>
-          <p className="login-subtitle">
-            {isRegister
-              ? 'Join StudyHall and start your learning adventure'
-              : 'Log in to continue your journey'}
-          </p>
+        <div className="login-header">
+          <div className="login-slimes">
+            <img src={getSlimeSprite('purple')} alt="slime" className="login-slime" />
+            <img src={getSlimeSprite('pink')} alt="slime" className="login-slime" />
+            <img src={getSlimeSprite('skyblue')} alt="slime" className="login-slime" />
+          </div>
+          <h1>{isRegister ? 'Join StudyHall' : 'Welcome Back'}</h1>
+          <p>Start your learning adventure with slimes!</p>
+        </div>
 
-          {error && <div className="error-message">{error}</div>}
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label>Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter your username"
+              required
+              className="input-field"
+            />
+          </div>
 
-          <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={isRegister ? "Create a password (min. 6 characters)" : "Enter your password"}
+              required
+              minLength={isRegister ? 6 : undefined}
+              className="input-field"
+            />
+          </div>
+
+          {isRegister && (
             <div className="form-group">
-              <label>Username</label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                className="form-input"
-                placeholder="Enter your username"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Password</label>
+              <label>Confirm Password</label>
               <input
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm your password"
                 required
-                minLength={6}
-                className="form-input"
-                placeholder="Enter your password"
+                className="input-field"
               />
-              {isRegister && (
-                <small className="form-hint">Minimum 6 characters</small>
-              )}
             </div>
+          )}
 
-            {isRegister && (
-              <div className="form-group">
-                <label>I am a...</label>
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  className="form-select"
+          {isRegister && (
+            <div className="form-group">
+              <label>I am a...</label>
+              <div className="role-selector">
+                <button
+                  type="button"
+                  className={`role-button ${role === 'student' ? 'active' : ''}`}
+                  onClick={() => setRole('student')}
                 >
-                  <option value="student">🎓 Student</option>
-                  <option value="teacher">👨‍🏫 Teacher</option>
-                </select>
+                  <span className="role-icon">
+                    <Icon name="student" size={32} />
+                  </span>
+                  <span>Student</span>
+                </button>
+                <button
+                  type="button"
+                  className={`role-button ${role === 'teacher' ? 'active' : ''}`}
+                  onClick={() => setRole('teacher')}
+                >
+                  <span className="role-icon">
+                    <Icon name="teacher" size={32} />
+                  </span>
+                  <span>Teacher</span>
+                </button>
               </div>
-            )}
+            </div>
+          )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="submit-button"
-            >
-              {loading ? 'Please wait...' : isRegister ? 'Create Account' : 'Login'}
-            </button>
-          </form>
+          <button type="submit" className="submit-button">
+            {isRegister ? 'Create Account' : 'Login'}
+          </button>
+        </form>
 
-          <div className="toggle-mode">
-            <span>
-              {isRegister ? 'Already have an account?' : "Don't have an account?"}
-            </span>
-            <button
-              onClick={() => {
-                setIsRegister(!isRegister);
-                setError('');
-              }}
-              className="toggle-button"
-            >
-              {isRegister ? 'Login' : 'Sign Up'}
-            </button>
-          </div>
+        <div className="login-footer">
+          <button
+            onClick={() => setIsRegister(!isRegister)}
+            className="toggle-auth"
+          >
+            {isRegister ? 'Already have an account? Login' : "Don't have an account? Register"}
+          </button>
         </div>
       </motion.div>
     </div>
@@ -122,3 +149,4 @@ function Login({ onLogin }) {
 }
 
 export default Login;
+

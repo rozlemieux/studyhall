@@ -1,0 +1,242 @@
+.App {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #00C878 0%, #00E088 100%);
+}
+
+/* Common styles */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page {
+  min-height: calc(100vh - 80px);
+  padding: 100px 20px 40px;
+}
+
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
+.button {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.button-primary {
+  background: linear-gradient(135deg, #00C878 0%, #00E088 100%);
+  color: white;
+}
+
+.button-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 20px rgba(0, 200, 120, 0.4);
+}
+
+.button-secondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.button-secondary:hover {
+  background: #e0e0e0;
+  transform: scale(1.05);
+}
+
+.button-success {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+}
+
+.button-success:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 20px rgba(56, 239, 125, 0.4);
+}
+
+.button-danger {
+  background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+  color: white;
+}
+
+.button-danger:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 20px rgba(235, 51, 73, 0.4);
+}
+
+.button-warning {
+  background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+  color: #333;
+}
+
+.button-warning:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 20px rgba(247, 151, 30, 0.4);
+}
+
+.input {
+  width: 100%;
+  padding: 12px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.3s ease;
+  margin-bottom: 15px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #00C878;
+}
+
+.select {
+  width: 100%;
+  padding: 12px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.3s ease;
+  margin-bottom: 15px;
+  background: white;
+  cursor: pointer;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #00C878;
+}
+
+.grid {
+  display: grid;
+  gap: 20px;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #00C878 0%, #00E088 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #00C878;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error {
+  background: #fee;
+  color: #c33;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border-left: 4px solid #c33;
+}
+
+.success {
+  background: #efe;
+  color: #3c3;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border-left: 4px solid #3c3;
+}
+
+.info {
+  background: #eef;
+  color: #33c;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border-left: 4px solid #33c;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page {
+    padding: 80px 15px 30px;
+  }
+  
+  .card {
+    padding: 20px;
+  }
+  
+  .grid-2, .grid-3, .grid-4 {
+    grid-template-columns: 1fr;
+  }
+}

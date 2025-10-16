@@ -1,0 +1,130 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 15px 0;
+}
+
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.logo-text {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00C878 0%, #00E088 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: #00C878;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #00C878 0%, #00E088 100%);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 8px 15px;
+  background: rgba(0, 200, 120, 0.1);
+  border-radius: 10px;
+}
+
+.nav-username {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.nav-role {
+  font-size: 12px;
+  color: #00C878;
+  text-transform: capitalize;
+}
+
+.nav-logout {
+  padding: 8px 20px;
+  background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.nav-logout:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(235, 51, 73, 0.3);
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 15px;
+  }
+  
+  .navbar-menu {
+    gap: 10px;
+    font-size: 12px;
+  }
+  
+  .logo-text {
+    font-size: 20px;
+  }
+  
+  .nav-link {
+    display: none;
+  }
+  
+  .nav-user {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+}

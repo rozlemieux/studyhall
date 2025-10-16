@@ -11,7 +11,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #00C878 0%, #00E088 100%);
+  background: linear-gradient(135deg, #00C878 0%, #00B369 100%);
   min-height: 100vh;
 }
 
@@ -24,9 +24,9 @@ code {
   min-height: 100vh;
 }
 
-/* Scrollbar styling */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -35,9 +35,10 @@ code {
 
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.3);
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
 }
+

@@ -1,135 +1,135 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import Icon from '../components/Icon';
+import { getSlimeSprite } from '../utils/slimeSprites';
 import './Home.css';
-import Slime from '../components/Slime';
 
-function Home() {
-  const slimes = ['mint', 'cherry', 'fire', 'water', 'rainbow', 'galaxy', 'golden', 'dragon'];
+function Home({ user }) {
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    if (user) {
+      if (user.role === 'teacher') {
+        navigate('/teacher');
+      } else {
+        navigate('/student');
+      }
+    } else {
+      navigate('/login');
+    }
+  };
+
+  const slimeIds = ['purple', 'pink', 'brown', 'orange', 'mint', 'skyblue', 'forestgreen', 'violet'];
 
   return (
-    <div className="home-page">
+    <div className="home">
       <div className="hero-section">
         <motion.div
+          className="hero-content"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="hero-content"
         >
           <h1 className="hero-title">
-            Welcome to <span className="gradient-text">StudyHall</span>
+            Learn with <span className="gradient-text">Slimes</span>
           </h1>
           <p className="hero-subtitle">
-            Transform learning into an epic adventure! 🎮
+            The most fun way to learn! Turn quizzes into epic adventures with our slime-themed learning platform.
           </p>
-          <p className="hero-description">
-            Gamified quiz platform with collectible Slimes, multiple game modes,
-            achievements, and real-time multiplayer action!
-          </p>
-          <div className="hero-buttons">
-            <Link to="/login" className="hero-button primary">
-              Get Started 🚀
-            </Link>
-          </div>
+          <button className="cta-button" onClick={handleGetStarted}>
+            Get Started
+          </button>
         </motion.div>
 
-        <div className="floating-slimes">
-          {slimes.map((slime, index) => (
-            <motion.div
-              key={slime}
-              className="floating-slime"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              style={{
-                left: `${(index % 4) * 25 + 10}%`,
-                top: `${Math.floor(index / 4) * 40 + 20}%`,
-                animationDelay: `${index * 0.3}s`
-              }}
-            >
-              <Slime slimeId={slime} size={80} />
-            </motion.div>
-          ))}
-        </div>
+        <motion.div
+          className="slime-showcase"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <div className="slime-grid">
+            {slimeIds.map((slimeId, index) => (
+              <motion.div
+                key={index}
+                className="slime-item"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.1 * index }}
+                whileHover={{ scale: 1.2, rotate: 10 }}
+              >
+                <img src={getSlimeSprite(slimeId)} alt={slimeId} className="slime-sprite" />
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
 
       <div className="features-section">
-        <h2 className="section-title">Why StudyHall?</h2>
+        <h2 className="section-title">Why Choose StudyHall?</h2>
         <div className="features-grid">
           <motion.div
             className="feature-card"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: 'spring', stiffness: 300 }}
+            whileHover={{ y: -10 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="feature-icon">🎮</div>
-            <h3>6 Game Modes</h3>
-            <p>Racing, Battle, Gold Quest, Tower, Survival & Classic</p>
+            <div className="feature-icon">
+              <Icon name="gamepad" size={48} color="#00C878" />
+            </div>
+            <h3>Multiple Game Modes</h3>
+            <p>From classic quizzes to tower defense and racing - learning has never been this fun!</p>
           </motion.div>
 
           <motion.div
             className="feature-card"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: 'spring', stiffness: 300 }}
+            whileHover={{ y: -10 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="feature-icon">🌮</div>
-            <h3>37 Slimes</h3>
-            <p>Collect unique characters from Common to Secret rarity</p>
+            <div className="feature-icon">
+              <Icon name="palette" size={48} color="#00C878" />
+            </div>
+            <h3>Collect Slimes</h3>
+            <p>Earn currency and collect adorable slime characters as you learn!</p>
           </motion.div>
 
           <motion.div
             className="feature-card"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: 'spring', stiffness: 300 }}
+            whileHover={{ y: -10 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="feature-icon">🏆</div>
-            <h3>Achievements</h3>
-            <p>Unlock 20 achievements across 7 categories</p>
+            <div className="feature-icon">
+              <Icon name="book" size={48} color="#00C878" />
+            </div>
+            <h3>Custom Questions</h3>
+            <p>Teachers can create custom question sets or use pre-made ones for any subject!</p>
           </motion.div>
 
           <motion.div
             className="feature-card"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: 'spring', stiffness: 300 }}
+            whileHover={{ y: -10 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="feature-icon">🗺️</div>
-            <h3>Custom Maps</h3>
-            <p>Create and share your own game maps</p>
-          </motion.div>
-
-          <motion.div
-            className="feature-card"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: 'spring', stiffness: 300 }}
-          >
-            <div className="feature-icon">⚡</div>
-            <h3>Real-time</h3>
-            <p>Live multiplayer with instant updates</p>
-          </motion.div>
-
-          <motion.div
-            className="feature-card"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: 'spring', stiffness: 300 }}
-          >
-            <div className="feature-icon">📊</div>
-            <h3>Leaderboards</h3>
-            <p>Compete globally and track your progress</p>
+            <div className="feature-icon">
+              <Icon name="trophy" size={48} color="#00C878" />
+            </div>
+            <h3>Real-time Competition</h3>
+            <p>Compete with classmates in real-time and climb to the top of the leaderboard!</p>
           </motion.div>
         </div>
       </div>
 
       <div className="cta-section">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          className="cta-box"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="cta-content"
         >
           <h2>Ready to Start Learning?</h2>
-          <p>Join thousands of students making education fun!</p>
-          <Link to="/login" className="cta-button">
-            Create Account Now 🎉
-          </Link>
+          <p>Join thousands of students and teachers making learning fun!</p>
+          <button className="cta-button-secondary" onClick={handleGetStarted}>
+            Join StudyHall
+          </button>
         </motion.div>
       </div>
     </div>
@@ -137,3 +137,4 @@ function Home() {
 }
 
 export default Home;
+

@@ -1,0 +1,81 @@
+.racing-game {
+  padding: 10px;
+}
+
+.racing-game h3 {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.race-track {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.race-lane {
+  display: grid;
+  grid-template-columns: 100px 1fr 60px;
+  align-items: center;
+  gap: 10px;
+}
+
+.lane-player {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lane-track {
+  position: relative;
+  height: 40px;
+  background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 50%, #90EE90 50%, #90EE90 100%);
+  border-radius: 20px;
+  border: 2px solid #666;
+  overflow: visible;
+}
+
+.track-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0, 200, 120, 0.3), rgba(0, 200, 120, 0.1));
+  border-radius: 20px;
+  transition: width 0.5s ease;
+}
+
+.racer-slime {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  font-size: 32px;
+  animation: bounce 0.5s ease-in-out infinite;
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(-50%) translateX(-50%) translateY(0); }
+  50% { transform: translateY(-50%) translateX(-50%) translateY(-5px); }
+}
+
+.finish-line {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+}
+
+.lane-score {
+  font-size: 14px;
+  font-weight: 700;
+  color: #00C878;
+  text-align: right;
+}

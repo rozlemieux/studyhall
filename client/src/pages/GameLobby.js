@@ -2,177 +2,182 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { motion } from 'framer-motion';
-import Slime from '../components/Slime';
+import { getSlimeSprite, getSlimeColor } from '../utils/slimeSprites';
 import './GameLobby.css';
 
-let socket;
+const socket = io('http://localhost:5001');
 
 function GameLobby({ user }) {
   const { gameCode } = useParams();
-  const navigate = useNavigate();
-  const [game, setGame] = useState(null);
   const [players, setPlayers] = useState([]);
-  const [error, setError] = useState('');
-  const [playerData, setPlayerData] = useState(null);
+  const [isHost, setIsHost] = useState(false);
+  const [game, setGame] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch player data for slime
-    fetch(`/api/player/${user.id}`)
-      .then(res => res.json())
-      .then(data => setPlayerData(data))
-      .catch(err => console.error('Error fetching player data:', err));
-
-    // Connect to socket (will use proxy)
-    socket = io();
-
-    // Join or get game
-    if (user.role === 'student') {
-      socket.emit('join-game', {
-        gameCode: gameCode,
-        userId: user.id,
-        username: user.username,
-        slime: playerData?.selectedSlime || 'mint'
-      });
-    } else {
-      socket.emit('get-game-state', { gameCode });
-    }
-
-    socket.on('join-success', (data) => {
-      setGame(data.game);
-      setPlayers(data.game.players);
-    });
+    console.log(`GameLobby mounted for code: ${gameCode}, socket ID: ${socket.id}`);
+    
+    // Request current game state when component mounts
+    socket.emit('get-game-state', { gameCode });
 
     socket.on('game-state', (data) => {
-      setGame(data.game);
-      setPlayers(data.game.players);
+      console.log('Received game-state:', data);
+      if (data.game) {
+        setPlayers(data.game.players || []);
+        setGame(data.game);
+        const amHost = socket.id === data.game.hostId;
+        setIsHost(amHost);
+        console.log(`I am ${amHost ? 'HOST' : 'PLAYER'}. Players: ${data.game.players.length}`);
+      }
     });
 
     socket.on('player-joined', (data) => {
+      console.log('Player joined! New players list:', data.players);
       setPlayers(data.players);
     });
 
     socket.on('player-left', (data) => {
+      console.log('Player left! New players list:', data.players);
       setPlayers(data.players);
     });
 
-    socket.on('join-error', (data) => {
-      setError(data.message);
+    socket.on('game-started', (data) => {
+      console.log('Game starting!');
+      navigate(`/play/${gameCode}`);
     });
 
-    socket.on('game-started', () => {
-      navigate(`/game/${gameCode}`);
+    // Check if user is host  
+    socket.on('game-created', (data) => {
+      console.log('Game created event:', data);
+      if (data.gameCode === gameCode) {
+        setIsHost(true);
+        console.log('Setting myself as host');
+      }
     });
 
     return () => {
-      socket.disconnect();
+      console.log('GameLobby unmounting');
+      socket.off('game-state');
+      socket.off('player-joined');
+      socket.off('player-left');
+      socket.off('game-started');
+      socket.off('game-created');
     };
-  }, [gameCode, user, navigate, playerData]);
+  }, [gameCode, navigate]);
 
   const handleStartGame = () => {
-    if (players.length === 0) {
-      alert('Wait for at least one player to join!');
-      return;
-    }
     socket.emit('start-game', { gameCode });
   };
 
-  const handleCopyCode = () => {
-    navigator.clipboard.writeText(gameCode);
-    alert('Game code copied to clipboard!');
+  const slimeEmojis = {
+    // Row 1
+    mint: '🟢', red: '🔴', purple: '🟣', yellow: '🟡', skyblue: '🔵', rainbow1: '🌈', brown: '🟤', lime: '🟢', navy: '🔷', pink: '🩷', golden: '💛',
+    // Row 2
+    forestgreen: '🟢', chocolate: '🟫', beige: '🟤', orange: '🟠', darkblue: '🔵', violet: '🟣', crimson: '🔴', purpledevil: '😈', sage: '🟢', buttercup: '💛', neongreen: '🟢',
+    // Row 3
+    cyanpink: '💙', rainbowpurple: '🌈', hotpink: '💗', lavender: '💜', iceblue: '🧊', frostpink: '💗', magenta: '💗', eggplant: '🍆', grape: '🍇', plum: '🟣', midnight: '🌙',
+    // Row 4
+    aqua: '💧', peach: '🍑', twilight: '🌆', bubblegum: '🩷', seafoam: '🌊', turquoise: '💎', amber: '🟡', jade: '💚', teal: '🔷', sunshine: '☀️',
+    // Row 5
+    iris: '🌸', galaxy: '🌌', orchid: '🪻', periwinkle: '💙', coral: '🪸', sunrise: '🌅', emerald: '💎', citrus: '🍋', cream: '🍦', amethyst: '💜', sapphire: '💙',
+    // Row 6
+    poolblue: '🏊', olive: '🫒', mocha: '☕', kitty: '🐱', ribbon: '🎀', shadow: '🌑', ghostly: '👻', poison: '☣️', pearl: '🦪', maroon: '🟥',
+    // Row 7
+    fireice: '🔥', cosmic: '🌌', ocean: '🌊', bumblebee: '🐝', yoshi: '🦖', void: '🕳️', prismatic: '✨', spectrum: '🌈', holographic: '💿',
+    // Row 8+
+    cow: '🐄', human: '😊', pride: '🏳️‍🌈', flamingo: '🦩', ninja: '🥷', royal: '👑', tako: '🐙', unicorn: '🦄'
   };
-
-  if (error) {
-    return (
-      <div className="lobby-page">
-        <div className="container">
-          <div className="error-box">
-            <h2>❌ Error</h2>
-            <p>{error}</p>
-            <button onClick={() => navigate(-1)} className="button button-primary">
-              Go Back
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!game) {
-    return (
-      <div className="lobby-page">
-        <div className="loading">
-          <div className="spinner"></div>
-          <p>Connecting to game...</p>
-        </div>
-      </div>
-    );
-  }
-
-  const isHost = user.id === game.hostId || user.role === 'teacher';
 
   return (
     <div className="lobby-page">
-      <div className="container">
+      <div className="lobby-container">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
           className="lobby-header"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
         >
-          <h1>Game Lobby 🎮</h1>
+          <h1>Game Lobby</h1>
           <div className="game-code-display">
             <span className="code-label">Game Code:</span>
             <span className="code-value">{gameCode}</span>
-            <button onClick={handleCopyCode} className="copy-button">📋</button>
           </div>
         </motion.div>
 
-        <div className="lobby-content">
+        <motion.div
+          className="lobby-content"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
           <div className="players-section">
             <h2>Players ({players.length})</h2>
             <div className="players-grid">
               {players.map((player, index) => (
                 <motion.div
                   key={player.id}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
                   className="player-card"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
                 >
                   <div className="player-slime">
-                    <Slime slimeId={player.slime} size={70} />
+                    <img 
+                      src={getSlimeSprite(player.slime)} 
+                      alt={player.slime}
+                      className="slime-sprite"
+                    />
                   </div>
                   <div className="player-name">{player.username}</div>
+                  {player.ready && <div className="ready-badge">✓ Ready</div>}
                 </motion.div>
               ))}
+              
               {players.length === 0 && (
                 <div className="waiting-message">
-                  <p>🕒 Waiting for players to join...</p>
+                  <div className="waiting-icon">⏳</div>
+                  <p>Waiting for players to join...</p>
                 </div>
               )}
             </div>
           </div>
 
-          {isHost && (
-            <div className="host-controls">
+          <div className="lobby-actions">
+            {isHost ? (
               <button
+                className="button button-primary start-game-btn"
                 onClick={handleStartGame}
                 disabled={players.length === 0}
-                className="button button-success button-large"
               >
-                🚀 Start Game
+                Start Game
               </button>
-            </div>
-          )}
+            ) : (
+              <div className="waiting-host">
+                <p>Waiting for host to start the game...</p>
+              </div>
+            )}
+          </div>
 
-          {!isHost && (
-            <div className="waiting-host">
-              <p>🕒 Waiting for host to start the game...</p>
+          <div className="lobby-info">
+            <div className="info-card">
+              <div className="info-icon">🎯</div>
+              <div className="info-text">
+                <h3>How to Play</h3>
+                <p>Answer questions correctly to earn points and currency!</p>
+              </div>
             </div>
-          )}
-        </div>
+            <div className="info-card">
+              <div className="info-icon">⚡</div>
+              <div className="info-text">
+                <h3>Speed Matters</h3>
+                <p>Faster answers earn more points!</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
 }
 
 export default GameLobby;
+
