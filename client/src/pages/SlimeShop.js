@@ -127,7 +127,9 @@ function SlimeShop({ user }) {
             className="reward-popup"
           >
             <h2>🎉 You got:</h2>
-            <div className="reward-slime">{getSlimeDisplay(rewardSlime.id)}</div>
+            <div className="reward-slime">
+              <Slime slimeId={rewardSlime.id} size={140} />
+            </div>
             <p>{rewardSlime.name}</p>
           </motion.div>
         )}
