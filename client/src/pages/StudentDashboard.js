@@ -88,7 +88,7 @@ function StudentDashboard({ user }) {
             {playerData && (
               <div className="current-slime">
                 <div className="slime-display-large">
-                  {getSlimeDisplay(playerData.selectedSlime)}
+                  <Slime slimeId={playerData.selectedSlime} size={120} />
                 </div>
                 <div className="slime-info">
                   <h3>{playerData.selectedSlime}</h3>
