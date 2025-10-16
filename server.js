@@ -687,6 +687,17 @@ app.get('/api/leaderboard', async (req, res) => {
   }
 });
 
+// Serve static files from React build in production
+const path = require('path');
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client', 'build')));
+  
+  // Handle React routing - return index.html for all non-API routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+  });
+}
+
 // Socket.io for real-time gameplay
 io.on('connection', (socket) => {
   console.log('New client connected:', socket.id);
