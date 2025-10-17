@@ -4,7 +4,7 @@ import Icon from './Icon';
 import Logo from './Logo';
 import './Navbar.css';
 
-function Navbar({ user, onLogout }) {
+function Navbar({ user, onLogout, soundEnabled, onToggleSound }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
