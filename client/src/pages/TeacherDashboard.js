@@ -201,13 +201,14 @@ function TeacherDashboard({ user }) {
                 </div>
               )}
 
-              <button 
+              <button
                 className="button button-primary launch-btn"
                 onClick={handleCreateGame}
                 disabled={!selectedSet}
               >
-                Launch Game
+                🚀 Create Game & Get Code
               </button>
+              <p className="launch-hint">Students can join immediately once you get the code!</p>
             </div>
           </motion.div>
         )}
