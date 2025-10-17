@@ -46,7 +46,7 @@ function AppContent() {
     const handleKeyPress = (e) => {
       sequence += e.key.toLowerCase();
       if (sequence.includes('takotime')) {
-        toast.success('🐙 TAKOTIME!!! You found the secret code!');
+        showSuccess('🐙 TAKOTIME!!! You found the secret code!');
         sequence = '';
       }
       if (sequence.length > 20) {
@@ -56,7 +56,7 @@ function AppContent() {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [toast]);
+  }, [showSuccess]);
 
   const handleLogin = (userData) => {
     setUser(userData);
