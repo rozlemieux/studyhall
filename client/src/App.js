@@ -26,8 +26,13 @@ function AppContent() {
     // Check for stored user
     const storedUser = localStorage.getItem('studyhall_user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        localStorage.removeItem('studyhall_user');
+      }
     }
+    setLoading(false);
 
     // Easter egg listener
     let sequence = '';
