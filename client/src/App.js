@@ -27,7 +27,7 @@ import NotFound from './pages/NotFound';
 function AppContent() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const toast = useToast();
+  const { toasts, soundEnabled, toggleSound, showSuccess } = useApp();
 
   useEffect(() => {
     // Check for stored user
