@@ -19,6 +19,7 @@ import NotFound from './pages/NotFound';
 
 function AppContent() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const toast = useToast();
 
   useEffect(() => {
