@@ -14,6 +14,8 @@ import CreateQuestionSet from './pages/CreateQuestionSet';
 import MapsBrowser from './pages/MapsBrowser';
 import MapCreator from './pages/MapCreator';
 import Leaderboard from './pages/Leaderboard';
+import Achievements from './pages/Achievements';
+import NotFound from './pages/NotFound';
 
 function AppContent() {
   const [user, setUser] = useState(null);
