@@ -143,13 +143,19 @@ function GameLobby({ user }) {
 
           <div className="lobby-actions">
             {isHost ? (
-              <button
-                className="button button-primary start-game-btn"
-                onClick={handleStartGame}
-                disabled={players.length === 0}
-              >
-                Start Game
-              </button>
+              <div className="host-controls">
+                <button
+                  className="button button-primary start-game-btn"
+                  onClick={handleStartGame}
+                >
+                  {players.length === 0 ? '🚀 Start Solo Practice' : `🎮 Start Game (${players.length} player${players.length > 1 ? 's' : ''})`}
+                </button>
+                <p className="start-hint">
+                  {players.length === 0 
+                    ? 'No players yet - start solo or share the game code!' 
+                    : 'Ready to begin! Click to start the game.'}
+                </p>
+              </div>
             ) : (
               <div className="waiting-host">
                 <p>Waiting for host to start the game...</p>
