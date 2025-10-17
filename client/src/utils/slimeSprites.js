@@ -365,3 +365,20 @@ export const getSlimeGradient = (slimeId) => {
  * 
  * That's it! The slime will automatically be generated with these features.
  */
+
+// Emoji fallback map for backwards compatibility
+export const getSlimeEmoji = (slimeId) => {
+  const emojiMap = {
+    mint: '🟢', cherry: '🍒', blueberry: '🫐', orange: '🍊',
+    chocolate: '🍫', watermelon: '🍉', fire: '🔥', water: '💧',
+    ice: '🧊', lightning: '⚡', forest: '🌲', ocean: '🌊',
+    rainbow: '🌈', midnight: '🌙', sakura: '🌸', pumpkin: '🎃',
+    honey: '🍯', coral: '🪸', ruby: '💎', sapphire: '💠',
+    emerald: '✨', amethyst: '💜', opal: '🔮', galaxy: '🌌',
+    nebula: '☄️', aurora: '🌅', golden: '🌟', phoenix: '🔥',
+    dragon: '🐉', ghost: '👻', unicorn: '🦄', king: '👑',
+    queen: '👸', wizard: '🧙', knight: '⚔️', ninja: '🥷',
+    tako: '🌮'
+  };
+  return emojiMap[slimeId] || '🟢';
+};
