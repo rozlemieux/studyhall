@@ -10,6 +10,7 @@ const socket = io();
 
 function GameLobby({ user }) {
   const { gameCode } = useParams();
+  const { copyToClipboard, playSound, showSuccess } = useApp();
   const [players, setPlayers] = useState([]);
   const [isHost, setIsHost] = useState(false);
   const [game, setGame] = useState(null);
