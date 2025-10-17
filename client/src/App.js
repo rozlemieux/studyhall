@@ -61,6 +61,15 @@ function AppContent() {
     localStorage.removeItem('studyhall_user');
   };
 
+  if (loading) {
+    return (
+      <div className="app-loading">
+        <div className="spinner"></div>
+        <p>Loading StudyHall...</p>
+      </div>
+    );
+  }
+
   return (
     <Router>
       <div className="App">
