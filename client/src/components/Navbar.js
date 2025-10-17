@@ -37,6 +37,14 @@ function Navbar({ user, onLogout, soundEnabled, onToggleSound }) {
                   <Link to="/leaderboard" className="nav-link">Leaderboard</Link>
                 </>
               )}
+              <button 
+                onClick={onToggleSound} 
+                className="sound-toggle"
+                title={soundEnabled ? 'Sound On' : 'Sound Off'}
+              >
+                {soundEnabled ? '🔊' : '🔇'}
+              </button>
+              
               <div className="user-info">
                 {user.role === 'student' && (
                   <span className="currency-badge">
