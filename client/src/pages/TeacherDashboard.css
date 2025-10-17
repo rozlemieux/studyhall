@@ -181,6 +181,14 @@
   font-size: 18px;
 }
 
+.launch-hint {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  margin-top: 10px;
+  font-style: italic;
+}
+
 .launch-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
