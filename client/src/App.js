@@ -109,6 +109,7 @@ function AppContent() {
             path="/achievements" 
             element={user && user.role === 'student' ? <Achievements user={user} /> : <Navigate to="/login" />} 
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </Router>
