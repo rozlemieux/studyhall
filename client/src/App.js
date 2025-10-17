@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
+
+// Context
+import { AppProvider, useApp } from './contexts/AppContext';
+
+// Components
 import Navbar from './components/Navbar';
-import { ToastProvider, useToast } from './components/Toast';
+import ToastContainer from './components/ToastContainer';
+
+// Pages
 import Home from './pages/Home';
 import Login from './pages/Login';
 import TeacherDashboard from './pages/TeacherDashboard';
