@@ -80,7 +80,8 @@ function AppContent() {
   return (
     <Router>
       <div className="App">
-        <Navbar user={user} onLogout={handleLogout} />
+        <Navbar user={user} onLogout={handleLogout} soundEnabled={soundEnabled} onToggleSound={toggleSound} />
+        <ToastContainer toasts={toasts} />
         <Routes>
           <Route path="/" element={<Home user={user} />} />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
