@@ -102,6 +102,13 @@ function GameLobby({ user }) {
           <div className="game-code-display">
             <span className="code-label">Game Code:</span>
             <span className="code-value">{gameCode}</span>
+            <button 
+              onClick={() => copyToClipboard(gameCode, `Game code ${gameCode} copied!`)} 
+              className="copy-button"
+              title="Copy game code"
+            >
+              📋
+            </button>
           </div>
         </motion.div>
 
