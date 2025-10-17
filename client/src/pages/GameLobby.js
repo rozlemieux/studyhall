@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { motion } from 'framer-motion';
 import { getSlimeSprite, getSlimeColor } from '../utils/slimeSprites';
+import { useApp } from '../contexts/AppContext';
 import './GameLobby.css';
 
 const socket = io();
