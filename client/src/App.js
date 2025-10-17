@@ -126,9 +126,9 @@ function AppContent() {
 
 function App() {
   return (
-    <ToastProvider>
+    <AppProvider>
       <AppContent />
-    </ToastProvider>
+    </AppProvider>
   );
 }
 
