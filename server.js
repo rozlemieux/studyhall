@@ -882,23 +882,45 @@ io.on('connection', (socket) => {
 
   socket.on('join-game', (data) => {
     const game = activeGames.get(data.gameCode);
-    if (game && game.status === 'waiting') {
-      const player = {
-        id: socket.id,
-        userId: data.userId,
-        username: data.username,
-        slime: data.slime || 'purple',
-        score: 0,
-        ready: false
-      };
-      game.players.push(player);
-      socket.join(data.gameCode);
-      io.to(data.gameCode).emit('player-joined', { player, players: game.players });
-      socket.emit('join-success', { game });
-      console.log(`Player ${data.username} joined game ${data.gameCode}. Total players: ${game.players.length}`);
-    } else {
+    
+    if (!game) {
+      console.log(`Join failed: Game ${data.gameCode} not found`);
       socket.emit('join-error', { message: 'Game not found or already started' });
+      return;
     }
+    
+    if (game.status !== 'waiting') {
+      console.log(`Join failed: Game ${data.gameCode} already started`);
+      socket.emit('join-error', { message: 'Game not found or already started' });
+      return;
+    }
+    
+    // Check if player is already in game (by userId or socketId)
+    const existingPlayer = game.players.find(p => p.userId === data.userId || p.id === socket.id);
+    
+    if (existingPlayer) {
+      // Player already in game, just send success
+      console.log(`Player ${data.username} already in game ${data.gameCode}, reconnecting...`);
+      socket.join(data.gameCode);
+      socket.emit('join-success', { game });
+      return;
+    }
+    
+    // Add new player
+    const player = {
+      id: socket.id,
+      userId: data.userId,
+      username: data.username,
+      slime: data.slime || 'mint',
+      score: 0,
+      ready: false
+    };
+    
+    game.players.push(player);
+    socket.join(data.gameCode);
+    io.to(data.gameCode).emit('player-joined', { player, players: game.players });
+    socket.emit('join-success', { game });
+    console.log(`Player ${data.username} joined game ${data.gameCode}. Total players: ${game.players.length}`);
   });
 
   socket.on('start-game', (data) => {
