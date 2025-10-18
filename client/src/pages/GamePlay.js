@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { motion } from 'framer-motion';
@@ -7,8 +7,6 @@ import RacingGame from './games/RacingGame';
 import BattleGame from './games/BattleGame';
 import GoldQuestGame from './games/GoldQuestGame';
 import './GamePlay.css';
-
-const socket = io();
 
 function GamePlay({ user }) {
   const { gameCode } = useParams();
@@ -22,10 +20,38 @@ function GamePlay({ user }) {
   const [players, setPlayers] = useState([]);
   const [gameFinished, setGameFinished] = useState(false);
   const [gameMode, setGameMode] = useState('classic');
+  const [loading, setLoading] = useState(true);
+  const socketRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Create socket for this component
+    const socket = io();
+    socketRef.current = socket;
+    
+    console.log('GamePlay mounted for game:', gameCode);
+    
+    // Wait for connection then request to rejoin game
+    socket.on('connect', () => {
+      console.log('GamePlay socket connected:', socket.id);
+      // Rejoin the game to update socket and get current state
+      socket.emit('join-game', {
+        gameCode: gameCode,
+        userId: user.id,
+        username: user.username,
+        slime: 'mint' // Will be updated from player data
+      });
+    });
+    
+    socket.on('join-success', (data) => {
+      console.log('Successfully rejoined game in GamePlay');
+      setPlayers(data.game.players || []);
+      // Game state will be sent via game-started event
+    });
+    
     socket.on('game-started', (data) => {
+      console.log('Received game-started event:', data);
+      setLoading(false);
       setCurrentQuestion(data.question);
       setQuestionNumber(data.questionNumber);
       setTotalQuestions(data.totalQuestions);
