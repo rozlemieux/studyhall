@@ -30,6 +30,10 @@ function StudentDashboard({ user }) {
     fetchSlimes();
     fetchQuestionSets();
 
+    socket.on('connect', () => {
+      console.log('StudentDashboard socket connected:', socket.id);
+    });
+
     socket.on('join-success', (data) => {
       navigate(`/lobby/${gameCode}`);
     });
@@ -46,6 +50,7 @@ function StudentDashboard({ user }) {
     });
 
     return () => {
+      socket.off('connect');
       socket.off('join-success');
       socket.off('join-error');
       socket.off('game-created');
