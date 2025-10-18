@@ -26,25 +26,10 @@ function GameLobby({ user }) {
       .then(res => res.json())
       .then(data => {
         setPlayerData(data);
-        
-        // Join the game if we're a student
-        if (user.role === 'student') {
-          console.log('Attempting to join game as student');
-          socket.emit('join-game', {
-            gameCode: gameCode,
-            userId: user.id,
-            username: user.username,
-            slime: data.selectedSlime || 'mint'
-          });
-        } else if (user.role === 'teacher') {
-          // Teachers are automatically hosts
-          console.log('Teacher detected - setting as host');
-          setIsHost(true);
-        }
       })
       .catch(err => console.error('Error fetching player data:', err));
     
-    // Request current game state when component mounts
+    // Request current game state first
     socket.emit('get-game-state', { gameCode });
 
     socket.on('game-state', (data) => {
