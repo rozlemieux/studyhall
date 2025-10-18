@@ -70,15 +70,28 @@ function TeacherDashboard({ user }) {
       return;
     }
 
-    if (socketRef.current) {
-      socketRef.current.emit('create-game', {
-        questionSetId: selectedSet,
-        gameMode: gameMode,
-        mapId: selectedMap,
-        hostUserId: user.id,
-        hostUsername: user.username,
-        hostSlime: 'mint',
-        settings: {}
+    if (!socketRef.current) {
+      alert('Connection not ready. Please try again.');
+      return;
+    }
+
+    const socket = socketRef.current;
+    
+    const createGameData = {
+      questionSetId: selectedSet,
+      gameMode: gameMode,
+      mapId: selectedMap,
+      hostUserId: user.id,
+      hostUsername: user.username,
+      hostSlime: 'mint',
+      settings: {}
+    };
+    
+    if (socket.connected) {
+      socket.emit('create-game', createGameData);
+    } else {
+      socket.once('connect', () => {
+        socket.emit('create-game', createGameData);
       });
     }
   };
