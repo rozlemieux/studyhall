@@ -38,15 +38,35 @@ function GameLobby({ user }) {
         setPlayers(data.game.players || []);
         setGame(data.game);
         
-        // Check if we're the host
-        if (user.role === 'teacher') {
-          setIsHost(true);
-        } else {
-          const amHost = socket.id === data.game.hostId;
-          setIsHost(amHost);
+        // Check if we're already in the game
+        const alreadyInGame = data.game.players.some(p => p.userId === user.id || p.id === socket.id);
+        const amHost = socket.id === data.game.hostId;
+        
+        setIsHost(amHost);
+        
+        // If not in game and not host, try to join
+        if (!alreadyInGame && !amHost && playerData) {
+          console.log('Not in game yet, attempting to join...');
+          socket.emit('join-game', {
+            gameCode: gameCode,
+            userId: user.id,
+            username: user.username,
+            slime: playerData.selectedSlime || 'mint'
+          });
         }
         
-        console.log(`I am ${user.role === 'teacher' ? 'HOST (teacher)' : 'PLAYER'}. Players: ${data.game.players.length}`);
+        console.log(`I am ${amHost ? 'HOST' : 'PLAYER'}. Players: ${data.game.players.length}`);
+      } else {
+        // Game doesn't exist, try to join anyway (maybe it will be created)
+        console.log('No game state received, attempting to join...');
+        if (playerData) {
+          socket.emit('join-game', {
+            gameCode: gameCode,
+            userId: user.id,
+            username: user.username,
+            slime: playerData.selectedSlime || 'mint'
+          });
+        }
       }
     });
 
