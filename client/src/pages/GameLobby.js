@@ -94,12 +94,14 @@ function GameLobby({ user }) {
     return () => {
       console.log('GameLobby unmounting');
       socket.off('game-state');
+      socket.off('join-success');
+      socket.off('join-error');
       socket.off('player-joined');
       socket.off('player-left');
       socket.off('game-started');
       socket.off('game-created');
     };
-  }, [gameCode, navigate]);
+  }, [gameCode, navigate, user, playSound, showSuccess, showError]);
 
   const handleStartGame = () => {
     socket.emit('start-game', { gameCode });
