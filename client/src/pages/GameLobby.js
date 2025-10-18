@@ -10,11 +10,13 @@ const socket = io();
 
 function GameLobby({ user }) {
   const { gameCode } = useParams();
-  const { copyToClipboard, playSound, showSuccess } = useApp();
+  const navigate = useNavigate();
+  const { copyToClipboard, playSound, showSuccess, showError } = useApp();
   const [players, setPlayers] = useState([]);
   const [isHost, setIsHost] = useState(false);
   const [game, setGame] = useState(null);
-  const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const [playerData, setPlayerData] = useState(null);
 
   useEffect(() => {
     console.log(`GameLobby mounted for code: ${gameCode}, socket ID: ${socket.id}`);
