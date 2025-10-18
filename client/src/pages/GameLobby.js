@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { motion } from 'framer-motion';
 import { getSlimeSprite, getSlimeColor } from '../utils/slimeSprites';
 import { useApp } from '../contexts/AppContext';
 import './GameLobby.css';
-
-const socket = io();
 
 function GameLobby({ user }) {
   const { gameCode } = useParams();
@@ -17,8 +15,13 @@ function GameLobby({ user }) {
   const [game, setGame] = useState(null);
   const [error, setError] = useState('');
   const [playerData, setPlayerData] = useState(null);
+  const socketRef = useRef(null);
 
   useEffect(() => {
+    // Create socket connection for this component instance
+    const socket = io();
+    socketRef.current = socket;
+    
     console.log(`GameLobby mounted for code: ${gameCode}, socket ID: ${socket.id}, user role: ${user.role}`);
     
     // Fetch player data for slime
