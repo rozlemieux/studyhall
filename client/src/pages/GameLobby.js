@@ -74,9 +74,15 @@ function GameLobby({ user }) {
       console.log('Successfully joined game!', data);
       setGame(data.game);
       setPlayers(data.game.players || []);
-      setIsHost(false);
-      playSound('join');
-      showSuccess(`Joined game ${gameCode}!`);
+      
+      // Check if we're the host
+      const amHost = socket.id === data.game.hostId;
+      setIsHost(amHost);
+      
+      if (!amHost) {
+        playSound('join');
+        showSuccess(`Joined game ${gameCode}!`);
+      }
     });
 
     socket.on('join-error', (data) => {
