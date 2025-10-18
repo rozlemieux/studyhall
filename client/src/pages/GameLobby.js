@@ -122,6 +122,7 @@ function GameLobby({ user }) {
 
     return () => {
       console.log('GameLobby unmounting, disconnecting socket');
+      socket.off('connect');
       socket.off('game-state');
       socket.off('join-success');
       socket.off('join-error');
@@ -131,7 +132,7 @@ function GameLobby({ user }) {
       socket.off('game-created');
       socket.disconnect();
     };
-  }, [gameCode, navigate, user, playSound, showSuccess, showError]);
+  }, [gameCode, navigate, user, playSound, showSuccess, showError, playerData]);
 
   const handleStartGame = () => {
     if (socketRef.current) {
