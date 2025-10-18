@@ -128,6 +128,7 @@ function GamePlay({ user }) {
     setSelectedAnswer(answerIndex);
     setAnswered(true);
     
+    console.log('Submitting answer:', { gameCode, answer: answerIndex, timeElapsed });
     socketRef.current.emit('submit-answer', {
       gameCode,
       answer: answerIndex,
