@@ -889,23 +889,37 @@ io.on('connection', (socket) => {
       return;
     }
     
-    if (game.status !== 'waiting') {
-      console.log(`Join failed: Game ${data.gameCode} already started`);
-      socket.emit('join-error', { message: 'Game not found or already started' });
-      return;
-    }
-    
-    // Check if player is already in game (by userId)
+    // Check if player is already in game (by userId) - allow reconnection even if game started
     const existingPlayer = game.players.find(p => p.userId === data.userId);
     
     if (existingPlayer) {
       // Player already in game, update their socket ID and rejoin room
-      console.log(`Player ${data.username} already in game ${data.gameCode}, reconnecting with new socket...`);
+      console.log(`Player ${data.username} rejoining game ${data.gameCode} (status: ${game.status}), updating socket...`);
       existingPlayer.id = socket.id; // Update to new socket ID
       socket.join(data.gameCode);
       socket.emit('join-success', { game });
-      // Notify others that player list updated (in case socket ID matters elsewhere)
-      io.to(data.gameCode).emit('player-joined', { player: existingPlayer, players: game.players });
+      
+      // If game is in progress, send current game state
+      if (game.status === 'playing') {
+        const questionSet = questionSets.get(game.questionSetId);
+        if (questionSet && game.currentQuestion < questionSet.questions.length) {
+          socket.emit('game-started', { 
+            game, 
+            gameMode: game.gameMode || 'classic',
+            question: questionSet.questions[game.currentQuestion],
+            questionNumber: game.currentQuestion + 1,
+            totalQuestions: questionSet.questions.length
+          });
+          console.log(`Sent current game state to reconnecting player`);
+        }
+      }
+      return;
+    }
+    
+    // New players can only join waiting games
+    if (game.status !== 'waiting') {
+      console.log(`Join failed: Game ${data.gameCode} already started (new player)`);
+      socket.emit('join-error', { message: 'Game not found or already started' });
       return;
     }
     
