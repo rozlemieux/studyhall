@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -6,8 +6,6 @@ import io from 'socket.io-client';
 import Icon from '../components/Icon';
 import { getSlimeSprite } from '../utils/slimeSprites';
 import './StudentDashboard.css';
-
-const socket = io();
 
 function StudentDashboard({ user }) {
   const [gameCode, setGameCode] = useState('');
@@ -20,9 +18,14 @@ function StudentDashboard({ user }) {
   const [selectedSet, setSelectedSet] = useState(null);
   const [gameMode, setGameMode] = useState('classic');
   const [selectedMap, setSelectedMap] = useState(null);
+  const socketRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Create socket connection
+    const socket = io();
+    socketRef.current = socket;
+
     fetchPlayerData();
     fetchSlimes();
     fetchQuestionSets();
