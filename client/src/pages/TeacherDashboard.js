@@ -70,6 +70,9 @@ function TeacherDashboard({ user }) {
       questionSetId: selectedSet,
       gameMode: gameMode,
       mapId: selectedMap,
+      hostUserId: user.id,
+      hostUsername: user.username,
+      hostSlime: 'mint',
       settings: {}
     });
   };
