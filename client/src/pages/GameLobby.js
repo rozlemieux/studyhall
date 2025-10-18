@@ -43,15 +43,15 @@ function GameLobby({ user }) {
         setPlayers(data.game.players || []);
         setGame(data.game);
         
-        // Check if we're already in the game (by userId only - socket IDs change between components)
-        const alreadyInGame = data.game.players.some(p => p.userId === user.id);
-        const amHost = data.game.players.some(p => p.userId === user.id && p.isHost);
+        // Check if we're already in the game (by userId)
+        const existingPlayer = data.game.players.find(p => p.userId === user.id);
+        const amHost = existingPlayer?.isHost || false;
         
         setIsHost(amHost);
         
-        // If not in game, try to join
-        if (!alreadyInGame && playerData) {
-          console.log('Not in game yet, attempting to join...');
+        // ALWAYS try to join to update socket ID, backend will handle if already in game
+        if (playerData) {
+          console.log(`${existingPlayer ? 'Reconnecting' : 'Joining'} to game...`);
           socket.emit('join-game', {
             gameCode: gameCode,
             userId: user.id,
