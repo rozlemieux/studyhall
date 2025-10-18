@@ -935,6 +935,9 @@ io.on('connection', (socket) => {
     
     // Check if the player requesting start is the host (by checking isHost flag in players)
     const requestingPlayer = game.players.find(p => p.id === socket.id);
+    console.log(`Start game request - Socket: ${socket.id}, Player found: ${!!requestingPlayer}, IsHost: ${requestingPlayer?.isHost}`);
+    console.log(`All players:`, game.players.map(p => ({ id: p.id, userId: p.userId, username: p.username, isHost: p.isHost })));
+    
     if (!requestingPlayer || !requestingPlayer.isHost) {
       console.log(`Start game denied: Socket ${socket.id} is not the host`);
       return;
