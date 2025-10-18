@@ -154,8 +154,9 @@ function StudentDashboard({ user }) {
         gameCode: gameCode.toUpperCase(),
         username: user.username,
         slime: playerData?.selectedSlime || 'mint',
-      userId: user.id
-    });
+        userId: user.id
+      });
+    }
   };
 
   return (
