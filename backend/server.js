@@ -970,8 +970,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('submit-answer', (data) => {
+    console.log(`[submit-answer] Received from socket ${socket.id} for game ${data.gameCode}`);
     const game = activeGames.get(data.gameCode);
-    if (!game) return;
+    if (!game) {
+      console.log(`[submit-answer] Game ${data.gameCode} not found!`);
+      return;
+    }
     
     const player = game.players.find(p => p.id === socket.id);
     if (!player) return;
