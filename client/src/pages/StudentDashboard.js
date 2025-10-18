@@ -104,15 +104,17 @@ function StudentDashboard({ user }) {
       return;
     }
 
-    socket.emit('create-game', {
-      questionSetId: selectedSet,
-      gameMode: gameMode,
-      mapId: selectedMap,
-      hostUserId: user.id,
-      hostUsername: user.username,
-      hostSlime: playerData?.selectedSlime || 'mint',
-      settings: {}
-    });
+    if (socketRef.current) {
+      socketRef.current.emit('create-game', {
+        questionSetId: selectedSet,
+        gameMode: gameMode,
+        mapId: selectedMap,
+        hostUserId: user.id,
+        hostUsername: user.username,
+        hostSlime: playerData?.selectedSlime || 'mint',
+        settings: {}
+      });
+    }
   };
 
   const handleSelectSlime = async (slimeId) => {
