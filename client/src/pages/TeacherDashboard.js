@@ -23,6 +23,10 @@ function TeacherDashboard({ user }) {
 
     fetchQuestionSets();
 
+    socket.on('connect', () => {
+      console.log('TeacherDashboard socket connected:', socket.id);
+    });
+
     socket.on('game-created', (data) => {
       console.log('Teacher: Game created with code:', data.gameCode);
       // Give a tiny delay for the socket to finish setup before navigating
@@ -32,6 +36,7 @@ function TeacherDashboard({ user }) {
     });
 
     return () => {
+      socket.off('connect');
       socket.off('game-created');
       socket.disconnect();
     };
