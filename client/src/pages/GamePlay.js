@@ -168,6 +168,18 @@ function GamePlay({ user }) {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="game-page">
+        <div className="game-container loading-game">
+          <div className="loading-spinner"></div>
+          <h2>Loading game...</h2>
+          <p>Connecting to game {gameCode}</p>
+        </div>
+      </div>
+    );
+  }
+
   if (gameFinished) {
     return (
       <div className="game-page">
