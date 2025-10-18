@@ -19,7 +19,7 @@ function GameLobby({ user }) {
   const [playerData, setPlayerData] = useState(null);
 
   useEffect(() => {
-    console.log(`GameLobby mounted for code: ${gameCode}, socket ID: ${socket.id}`);
+    console.log(`GameLobby mounted for code: ${gameCode}, socket ID: ${socket.id}, user role: ${user.role}`);
     
     // Fetch player data for slime
     fetch(`/api/player/${user.id}`)
@@ -36,6 +36,10 @@ function GameLobby({ user }) {
             username: user.username,
             slime: data.selectedSlime || 'mint'
           });
+        } else if (user.role === 'teacher') {
+          // Teachers are automatically hosts
+          console.log('Teacher detected - setting as host');
+          setIsHost(true);
         }
       })
       .catch(err => console.error('Error fetching player data:', err));
@@ -48,9 +52,16 @@ function GameLobby({ user }) {
       if (data.game) {
         setPlayers(data.game.players || []);
         setGame(data.game);
-        const amHost = socket.id === data.game.hostId;
-        setIsHost(amHost);
-        console.log(`I am ${amHost ? 'HOST' : 'PLAYER'}. Players: ${data.game.players.length}`);
+        
+        // Check if we're the host
+        if (user.role === 'teacher') {
+          setIsHost(true);
+        } else {
+          const amHost = socket.id === data.game.hostId;
+          setIsHost(amHost);
+        }
+        
+        console.log(`I am ${user.role === 'teacher' ? 'HOST (teacher)' : 'PLAYER'}. Players: ${data.game.players.length}`);
       }
     });
 
