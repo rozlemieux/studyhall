@@ -687,6 +687,145 @@ app.get('/api/leaderboard', async (req, res) => {
   }
 });
 
+// Practice mode API
+app.post('/api/practice/:userId/save', async (req, res) => {
+  const { questionSetId, gameMode, difficulty, score, questionsCorrect, questionsTotal, currencyEarned } = req.body;
+  
+  try {
+    const gameId = await database.practiceGames.save(
+      req.params.userId,
+      questionSetId,
+      gameMode,
+      difficulty,
+      score,
+      questionsCorrect,
+      questionsTotal,
+      currencyEarned
+    );
+
+    // Update player currency (50% of normal rate for practice)
+    const player = await database.playerData.get(req.params.userId);
+    if (player) {
+      await database.playerData.update(req.params.userId, {
+        currency: player.currency + currencyEarned
+      });
+    }
+
+    // Update player stats (practice games count separately)
+    await database.playerStats.update(req.params.userId, {
+      totalCorrect: questionsCorrect,
+      totalQuestions: questionsTotal,
+      totalCurrencyEarned: currencyEarned
+    });
+
+    res.json({ success: true, gameId });
+  } catch (error) {
+    console.error('Error saving practice game:', error);
+    res.status(500).json({ error: 'Failed to save practice game' });
+  }
+});
+
+app.get('/api/practice/:userId/history', async (req, res) => {
+  try {
+    const history = await database.practiceGames.getUserHistory(req.params.userId);
+    res.json(history);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch practice history' });
+  }
+});
+
+app.get('/api/practice/:userId/stats', async (req, res) => {
+  try {
+    const stats = await database.practiceGames.getStats(req.params.userId);
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch practice stats' });
+  }
+});
+
+// Classes API
+app.post('/api/classes', async (req, res) => {
+  const { name, description, teacherId } = req.body;
+  
+  try {
+    const newClass = await database.classes.create(name, description, teacherId);
+    res.json(newClass);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create class' });
+  }
+});
+
+app.get('/api/classes/teacher/:teacherId', async (req, res) => {
+  try {
+    const classes = await database.classes.getTeacherClasses(req.params.teacherId);
+    res.json(classes);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch classes' });
+  }
+});
+
+app.get('/api/classes/student/:studentId', async (req, res) => {
+  try {
+    const classes = await database.classes.getStudentClasses(req.params.studentId);
+    res.json(classes);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch classes' });
+  }
+});
+
+app.post('/api/classes/join', async (req, res) => {
+  const { classCode, studentId } = req.body;
+  
+  try {
+    const classData = await database.classes.getByCode(classCode);
+    if (!classData) {
+      return res.status(404).json({ error: 'Class not found' });
+    }
+
+    const result = await database.classes.addStudent(classData.id, studentId);
+    if (result.added) {
+      res.json({ success: true, class: classData });
+    } else {
+      res.json({ success: false, message: 'Already in this class' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to join class' });
+  }
+});
+
+app.get('/api/classes/:classId/members', async (req, res) => {
+  try {
+    const members = await database.classes.getMembers(req.params.classId);
+    res.json(members);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch class members' });
+  }
+});
+
+app.delete('/api/classes/:classId/member/:studentId', async (req, res) => {
+  try {
+    const result = await database.classes.removeStudent(req.params.classId, req.params.studentId);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to remove student' });
+  }
+});
+
+app.delete('/api/classes/:classId', async (req, res) => {
+  const { teacherId } = req.body;
+  
+  try {
+    const result = await database.classes.delete(req.params.classId, teacherId);
+    if (result.deleted) {
+      res.json({ success: true });
+    } else {
+      res.status(403).json({ error: 'Not authorized to delete this class' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete class' });
+  }
+});
+
 // Serve static files from React build in production
 const path = require('path');
 if (process.env.NODE_ENV === 'production') {
