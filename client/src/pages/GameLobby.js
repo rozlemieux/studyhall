@@ -22,8 +22,6 @@ function GameLobby({ user }) {
     const socket = io();
     socketRef.current = socket;
     
-    console.log(`GameLobby mounted for code: ${gameCode}, socket ID: ${socket.id}, user role: ${user.role}`);
-    
     // Fetch player data for slime
     fetch(`/api/player/${user.id}`)
       .then(res => res.json())
@@ -32,8 +30,12 @@ function GameLobby({ user }) {
       })
       .catch(err => console.error('Error fetching player data:', err));
     
-    // Request current game state first
-    socket.emit('get-game-state', { gameCode });
+    // Wait for socket to connect before doing anything
+    socket.on('connect', () => {
+      console.log(`GameLobby connected for code: ${gameCode}, socket ID: ${socket.id}, user role: ${user.role}`);
+      // Request current game state after connection
+      socket.emit('get-game-state', { gameCode });
+    });
 
     socket.on('game-state', (data) => {
       console.log('Received game-state:', data);
