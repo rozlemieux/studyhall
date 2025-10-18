@@ -22,6 +22,8 @@ import MapsBrowser from './pages/MapsBrowser';
 import MapCreator from './pages/MapCreator';
 import Leaderboard from './pages/Leaderboard';
 import Achievements from './pages/Achievements';
+import PracticeMode from './pages/PracticeMode';
+import PracticeGamePlay from './pages/PracticeGamePlay';
 import NotFound from './pages/NotFound';
 
 function AppContent() {
