@@ -687,6 +687,145 @@ app.get('/api/leaderboard', async (req, res) => {
   }
 });
 
+// Practice mode API
+app.post('/api/practice/:userId/save', async (req, res) => {
+  const { questionSetId, gameMode, difficulty, score, questionsCorrect, questionsTotal, currencyEarned } = req.body;
+  
+  try {
+    const gameId = await database.practiceGames.save(
+      req.params.userId,
+      questionSetId,
+      gameMode,
+      difficulty,
+      score,
+      questionsCorrect,
+      questionsTotal,
+      currencyEarned
+    );
+
+    // Update player currency (50% of normal rate for practice)
+    const player = await database.playerData.get(req.params.userId);
+    if (player) {
+      await database.playerData.update(req.params.userId, {
+        currency: player.currency + currencyEarned
+      });
+    }
+
+    // Update player stats (practice games count separately)
+    await database.playerStats.update(req.params.userId, {
+      totalCorrect: questionsCorrect,
+      totalQuestions: questionsTotal,
+      totalCurrencyEarned: currencyEarned
+    });
+
+    res.json({ success: true, gameId });
+  } catch (error) {
+    console.error('Error saving practice game:', error);
+    res.status(500).json({ error: 'Failed to save practice game' });
+  }
+});
+
+app.get('/api/practice/:userId/history', async (req, res) => {
+  try {
+    const history = await database.practiceGames.getUserHistory(req.params.userId);
+    res.json(history);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch practice history' });
+  }
+});
+
+app.get('/api/practice/:userId/stats', async (req, res) => {
+  try {
+    const stats = await database.practiceGames.getStats(req.params.userId);
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch practice stats' });
+  }
+});
+
+// Classes API
+app.post('/api/classes', async (req, res) => {
+  const { name, description, teacherId } = req.body;
+  
+  try {
+    const newClass = await database.classes.create(name, description, teacherId);
+    res.json(newClass);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create class' });
+  }
+});
+
+app.get('/api/classes/teacher/:teacherId', async (req, res) => {
+  try {
+    const classes = await database.classes.getTeacherClasses(req.params.teacherId);
+    res.json(classes);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch classes' });
+  }
+});
+
+app.get('/api/classes/student/:studentId', async (req, res) => {
+  try {
+    const classes = await database.classes.getStudentClasses(req.params.studentId);
+    res.json(classes);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch classes' });
+  }
+});
+
+app.post('/api/classes/join', async (req, res) => {
+  const { classCode, studentId } = req.body;
+  
+  try {
+    const classData = await database.classes.getByCode(classCode);
+    if (!classData) {
+      return res.status(404).json({ error: 'Class not found' });
+    }
+
+    const result = await database.classes.addStudent(classData.id, studentId);
+    if (result.added) {
+      res.json({ success: true, class: classData });
+    } else {
+      res.json({ success: false, message: 'Already in this class' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to join class' });
+  }
+});
+
+app.get('/api/classes/:classId/members', async (req, res) => {
+  try {
+    const members = await database.classes.getMembers(req.params.classId);
+    res.json(members);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch class members' });
+  }
+});
+
+app.delete('/api/classes/:classId/member/:studentId', async (req, res) => {
+  try {
+    const result = await database.classes.removeStudent(req.params.classId, req.params.studentId);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to remove student' });
+  }
+});
+
+app.delete('/api/classes/:classId', async (req, res) => {
+  const { teacherId } = req.body;
+  
+  try {
+    const result = await database.classes.delete(req.params.classId, teacherId);
+    if (result.deleted) {
+      res.json({ success: true });
+    } else {
+      res.status(403).json({ error: 'Not authorized to delete this class' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete class' });
+  }
+});
+
 // Serve static files from React build in production
 const path = require('path');
 if (process.env.NODE_ENV === 'production') {
@@ -704,20 +843,33 @@ io.on('connection', (socket) => {
 
   socket.on('create-game', (data) => {
     const gameCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+    
+    // Add host as first player
+    const hostPlayer = {
+      id: socket.id,
+      userId: data.hostUserId || data.userId,
+      username: data.hostUsername || data.username || 'Host',
+      slime: data.hostSlime || data.slime || 'mint',
+      score: 0,
+      ready: true,
+      isHost: true
+    };
+    
     const game = {
       code: gameCode,
       hostId: socket.id,
       questionSetId: data.questionSetId,
       gameMode: data.gameMode,
-      players: [],
+      players: [hostPlayer],
       status: 'waiting',
       currentQuestion: 0,
       settings: data.settings || {}
     };
+    
     activeGames.set(gameCode, game);
     socket.join(gameCode);
     socket.emit('game-created', { gameCode, game });
-    console.log(`Game ${gameCode} created by host ${socket.id}`);
+    console.log(`Game ${gameCode} created by host ${socket.id}. Host added as player: ${hostPlayer.username}`);
   });
 
   socket.on('get-game-state', (data) => {
@@ -730,23 +882,45 @@ io.on('connection', (socket) => {
 
   socket.on('join-game', (data) => {
     const game = activeGames.get(data.gameCode);
-    if (game && game.status === 'waiting') {
-      const player = {
-        id: socket.id,
-        userId: data.userId,
-        username: data.username,
-        slime: data.slime || 'purple',
-        score: 0,
-        ready: false
-      };
-      game.players.push(player);
-      socket.join(data.gameCode);
-      io.to(data.gameCode).emit('player-joined', { player, players: game.players });
-      socket.emit('join-success', { game });
-      console.log(`Player ${data.username} joined game ${data.gameCode}. Total players: ${game.players.length}`);
-    } else {
+    
+    if (!game) {
+      console.log(`Join failed: Game ${data.gameCode} not found`);
       socket.emit('join-error', { message: 'Game not found or already started' });
+      return;
     }
+    
+    if (game.status !== 'waiting') {
+      console.log(`Join failed: Game ${data.gameCode} already started`);
+      socket.emit('join-error', { message: 'Game not found or already started' });
+      return;
+    }
+    
+    // Check if player is already in game (by userId or socketId)
+    const existingPlayer = game.players.find(p => p.userId === data.userId || p.id === socket.id);
+    
+    if (existingPlayer) {
+      // Player already in game, just send success
+      console.log(`Player ${data.username} already in game ${data.gameCode}, reconnecting...`);
+      socket.join(data.gameCode);
+      socket.emit('join-success', { game });
+      return;
+    }
+    
+    // Add new player
+    const player = {
+      id: socket.id,
+      userId: data.userId,
+      username: data.username,
+      slime: data.slime || 'mint',
+      score: 0,
+      ready: false
+    };
+    
+    game.players.push(player);
+    socket.join(data.gameCode);
+    io.to(data.gameCode).emit('player-joined', { player, players: game.players });
+    socket.emit('join-success', { game });
+    console.log(`Player ${data.username} joined game ${data.gameCode}. Total players: ${game.players.length}`);
   });
 
   socket.on('start-game', (data) => {
