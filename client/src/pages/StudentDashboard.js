@@ -154,12 +154,33 @@ function StudentDashboard({ user }) {
       return;
     }
 
-    if (socketRef.current) {
-      socketRef.current.emit('join-game', {
+    if (!socketRef.current) {
+      alert('Connection not ready. Please try again.');
+      return;
+    }
+
+    const socket = socketRef.current;
+    
+    // If socket is already connected, emit immediately
+    if (socket.connected) {
+      console.log('Socket already connected, joining game...');
+      socket.emit('join-game', {
         gameCode: gameCode.toUpperCase(),
         username: user.username,
         slime: playerData?.selectedSlime || 'mint',
         userId: user.id
+      });
+    } else {
+      // Wait for connection, then emit
+      console.log('Socket not connected yet, waiting...');
+      socket.once('connect', () => {
+        console.log('Socket connected, now joining game...');
+        socket.emit('join-game', {
+          gameCode: gameCode.toUpperCase(),
+          username: user.username,
+          slime: playerData?.selectedSlime || 'mint',
+          userId: user.id
+        });
       });
     }
   };
