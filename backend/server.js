@@ -958,6 +958,11 @@ io.on('connection', (socket) => {
     }
     
     console.log(`Starting game ${data.gameCode} with ${game.players.length} players`);
+    
+    // Log who's in the room
+    const room = io.sockets.adapter.rooms.get(data.gameCode);
+    console.log(`Sockets in room ${data.gameCode}:`, room ? Array.from(room) : 'none');
+    
     game.status = 'playing';
     const questionSet = questionSets.get(game.questionSetId);
     io.to(data.gameCode).emit('game-started', { 
