@@ -119,7 +119,7 @@ function GameLobby({ user }) {
     });
 
     return () => {
-      console.log('GameLobby unmounting');
+      console.log('GameLobby unmounting, disconnecting socket');
       socket.off('game-state');
       socket.off('join-success');
       socket.off('join-error');
@@ -127,11 +127,14 @@ function GameLobby({ user }) {
       socket.off('player-left');
       socket.off('game-started');
       socket.off('game-created');
+      socket.disconnect();
     };
   }, [gameCode, navigate, user, playSound, showSuccess, showError]);
 
   const handleStartGame = () => {
-    socket.emit('start-game', { gameCode });
+    if (socketRef.current) {
+      socketRef.current.emit('start-game', { gameCode });
+    }
   };
 
   const slimeEmojis = {
