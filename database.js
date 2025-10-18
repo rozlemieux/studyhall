@@ -694,6 +694,209 @@ const achievements = {
   }
 };
 
+// Practice games functions
+const practiceGames = {
+  // Save practice game result
+  save: (userId, questionSetId, gameMode, difficulty, score, questionsCorrect, questionsTotal, currencyEarned) => {
+    return new Promise((resolve, reject) => {
+      db.run(
+        `INSERT INTO practice_games (user_id, question_set_id, game_mode, difficulty, score, questions_correct, questions_total, currency_earned) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [userId, questionSetId, gameMode, difficulty, score, questionsCorrect, questionsTotal, currencyEarned],
+        function(err) {
+          if (err) reject(err);
+          else resolve(this.lastID);
+        }
+      );
+    });
+  },
+
+  // Get user's practice history
+  getUserHistory: (userId, limit = 20) => {
+    return new Promise((resolve, reject) => {
+      db.all(
+        `SELECT * FROM practice_games 
+         WHERE user_id = ? 
+         ORDER BY played_at DESC 
+         LIMIT ?`,
+        [userId, limit],
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows);
+        }
+      );
+    });
+  },
+
+  // Get practice stats summary
+  getStats: (userId) => {
+    return new Promise((resolve, reject) => {
+      db.get(
+        `SELECT 
+          COUNT(*) as total_practice_games,
+          SUM(questions_correct) as total_correct,
+          SUM(questions_total) as total_questions,
+          SUM(currency_earned) as total_earned,
+          AVG(score) as avg_score
+         FROM practice_games 
+         WHERE user_id = ?`,
+        [userId],
+        (err, stats) => {
+          if (err) reject(err);
+          else resolve(stats || {
+            total_practice_games: 0,
+            total_correct: 0,
+            total_questions: 0,
+            total_earned: 0,
+            avg_score: 0
+          });
+        }
+      );
+    });
+  }
+};
+
+// Classes functions
+const classes = {
+  // Create a class
+  create: (name, description, teacherId) => {
+    return new Promise((resolve, reject) => {
+      // Generate unique 6-character class code
+      const classCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+      
+      db.run(
+        'INSERT INTO classes (name, description, teacher_id, class_code) VALUES (?, ?, ?, ?)',
+        [name, description, teacherId, classCode],
+        function(err) {
+          if (err) reject(err);
+          else resolve({
+            id: this.lastID,
+            name,
+            description,
+            teacherId,
+            classCode
+          });
+        }
+      );
+    });
+  },
+
+  // Get teacher's classes
+  getTeacherClasses: (teacherId) => {
+    return new Promise((resolve, reject) => {
+      db.all(
+        `SELECT c.*, 
+          (SELECT COUNT(*) FROM class_members WHERE class_id = c.id) as student_count
+         FROM classes c
+         WHERE c.teacher_id = ?
+         ORDER BY c.created_at DESC`,
+        [teacherId],
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows);
+        }
+      );
+    });
+  },
+
+  // Get student's classes
+  getStudentClasses: (studentId) => {
+    return new Promise((resolve, reject) => {
+      db.all(
+        `SELECT c.*, u.username as teacher_name
+         FROM classes c
+         JOIN class_members cm ON c.id = cm.class_id
+         JOIN users u ON c.teacher_id = u.id
+         WHERE cm.student_id = ?
+         ORDER BY cm.joined_at DESC`,
+        [studentId],
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows);
+        }
+      );
+    });
+  },
+
+  // Get class by code
+  getByCode: (classCode) => {
+    return new Promise((resolve, reject) => {
+      db.get(
+        'SELECT * FROM classes WHERE class_code = ?',
+        [classCode],
+        (err, row) => {
+          if (err) reject(err);
+          else resolve(row);
+        }
+      );
+    });
+  },
+
+  // Add student to class
+  addStudent: (classId, studentId) => {
+    return new Promise((resolve, reject) => {
+      db.run(
+        'INSERT OR IGNORE INTO class_members (class_id, student_id) VALUES (?, ?)',
+        [classId, studentId],
+        function(err) {
+          if (err) reject(err);
+          else resolve({ added: this.changes > 0 });
+        }
+      );
+    });
+  },
+
+  // Remove student from class
+  removeStudent: (classId, studentId) => {
+    return new Promise((resolve, reject) => {
+      db.run(
+        'DELETE FROM class_members WHERE class_id = ? AND student_id = ?',
+        [classId, studentId],
+        function(err) {
+          if (err) reject(err);
+          else resolve({ removed: this.changes > 0 });
+        }
+      );
+    });
+  },
+
+  // Get class members with stats
+  getMembers: (classId) => {
+    return new Promise((resolve, reject) => {
+      db.all(
+        `SELECT 
+          u.id, u.username,
+          ps.total_games, ps.total_wins, ps.total_correct, ps.total_questions,
+          cm.joined_at
+         FROM class_members cm
+         JOIN users u ON cm.student_id = u.id
+         LEFT JOIN player_stats ps ON u.id = ps.user_id
+         WHERE cm.class_id = ?
+         ORDER BY u.username ASC`,
+        [classId],
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows);
+        }
+      );
+    });
+  },
+
+  // Delete class
+  delete: (classId, teacherId) => {
+    return new Promise((resolve, reject) => {
+      db.run(
+        'DELETE FROM classes WHERE id = ? AND teacher_id = ?',
+        [classId, teacherId],
+        function(err) {
+          if (err) reject(err);
+          else resolve({ deleted: this.changes > 0 });
+        }
+      );
+    });
+  }
+};
+
 module.exports = {
   db,
   auth,
@@ -701,6 +904,8 @@ module.exports = {
   gameHistory,
   playerStats,
   achievements,
+  practiceGames,
+  classes,
   closeDatabase
 };
 
