@@ -1002,7 +1002,12 @@ io.on('connection', (socket) => {
     });
     
     // Check if all players have answered
+    const totalPlayers = game.players.length;
+    const answeredCount = game.players.filter(p => p.hasAnswered).length;
     const allAnswered = game.players.every(p => p.hasAnswered);
+    
+    console.log(`${answeredCount}/${totalPlayers} players answered. All answered: ${allAnswered}`);
+    console.log('Players status:', game.players.map(p => ({ username: p.username, hasAnswered: p.hasAnswered })));
     
     if (allAnswered) {
       console.log(`All players answered for question ${game.currentQuestion + 1}, moving to next question in 3 seconds...`);
@@ -1015,18 +1020,20 @@ io.on('connection', (socket) => {
         game.currentQuestion++;
         
         if (game.currentQuestion < questionSet.questions.length) {
+          console.log(`Sending next question: ${game.currentQuestion + 1} of ${questionSet.questions.length}`);
           io.to(data.gameCode).emit('next-question', { 
             question: questionSet.questions[game.currentQuestion],
             questionNumber: game.currentQuestion + 1,
             totalQuestions: questionSet.questions.length
           });
-          console.log(`Sent question ${game.currentQuestion + 1} of ${questionSet.questions.length}`);
+          console.log(`✓ Sent question ${game.currentQuestion + 1} to room ${data.gameCode}`);
         } else {
           game.status = 'finished';
+          console.log(`Game ${data.gameCode} finished, sending results...`);
           io.to(data.gameCode).emit('game-finished', { 
             players: game.players.sort((a, b) => b.score - a.score)
           });
-          console.log(`Game ${data.gameCode} finished`);
+          console.log(`✓ Sent game-finished to room ${data.gameCode}`);
         }
       }, 3000);
     }
