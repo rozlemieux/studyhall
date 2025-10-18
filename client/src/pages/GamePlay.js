@@ -82,12 +82,16 @@ function GamePlay({ user }) {
     });
 
     return () => {
+      console.log('GamePlay unmounting, disconnecting socket');
+      socket.off('connect');
+      socket.off('join-success');
       socket.off('game-started');
       socket.off('next-question');
       socket.off('answer-submitted');
       socket.off('game-finished');
+      socket.disconnect();
     };
-  }, []);
+  }, [gameCode, user.id, user.username]);
 
   useEffect(() => {
     if (answered || timeLeft <= 0) return;
