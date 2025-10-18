@@ -33,6 +33,7 @@ function TeacherDashboard({ user }) {
 
     return () => {
       socket.off('game-created');
+      socket.disconnect();
     };
   }, [navigate]);
 
