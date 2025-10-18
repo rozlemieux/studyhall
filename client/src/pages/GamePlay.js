@@ -111,9 +111,9 @@ function GamePlay({ user }) {
   }, [answered, timeLeft]);
 
   const handleTimeout = () => {
-    if (!answered) {
+    if (!answered && socketRef.current) {
       setAnswered(true);
-      socket.emit('submit-answer', {
+      socketRef.current.emit('submit-answer', {
         gameCode,
         answer: -1,
         timeElapsed: 20
@@ -122,12 +122,12 @@ function GamePlay({ user }) {
   };
 
   const handleAnswerSelect = (answerIndex) => {
-    if (answered) return;
+    if (answered || !socketRef.current) return;
 
     setSelectedAnswer(answerIndex);
     setAnswered(true);
     
-    socket.emit('submit-answer', {
+    socketRef.current.emit('submit-answer', {
       gameCode,
       answer: answerIndex,
       timeElapsed
