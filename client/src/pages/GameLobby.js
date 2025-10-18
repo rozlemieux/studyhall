@@ -49,29 +49,37 @@ function GameLobby({ user }) {
         
         setIsHost(amHost);
         
-        // ALWAYS try to join to update socket ID, backend will handle if already in game
-        if (playerData) {
-          console.log(`${existingPlayer ? 'Reconnecting' : 'Joining'} to game...`);
+        // ALWAYS try to join to update socket ID
+        // Fetch player data if not loaded, then join
+        const doJoin = (slime) => {
+          console.log(`${existingPlayer ? 'Reconnecting' : 'Joining'} to game with slime: ${slime}...`);
           socket.emit('join-game', {
             gameCode: gameCode,
             userId: user.id,
             username: user.username,
-            slime: playerData.selectedSlime || 'mint'
+            slime: slime || 'mint'
           });
+        };
+        
+        if (playerData) {
+          doJoin(playerData.selectedSlime);
+        } else {
+          // Player data not loaded yet, fetch it
+          fetch(`/api/player/${user.id}`)
+            .then(res => res.json())
+            .then(data => {
+              setPlayerData(data);
+              doJoin(data.selectedSlime);
+            })
+            .catch(err => {
+              console.error('Error fetching player data:', err);
+              doJoin('mint'); // Fallback
+            });
         }
         
         console.log(`I am ${amHost ? 'HOST' : 'PLAYER'}. Players: ${data.game.players.length}`);
       } else {
-        // Game doesn't exist, try to join anyway (maybe it will be created)
-        console.log('No game state received, attempting to join...');
-        if (playerData) {
-          socket.emit('join-game', {
-            gameCode: gameCode,
-            userId: user.id,
-            username: user.username,
-            slime: playerData.selectedSlime || 'mint'
-          });
-        }
+        console.log('No game state received');
       }
     });
 
