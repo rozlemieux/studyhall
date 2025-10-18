@@ -843,20 +843,33 @@ io.on('connection', (socket) => {
 
   socket.on('create-game', (data) => {
     const gameCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+    
+    // Add host as first player
+    const hostPlayer = {
+      id: socket.id,
+      userId: data.hostUserId || data.userId,
+      username: data.hostUsername || data.username || 'Host',
+      slime: data.hostSlime || data.slime || 'mint',
+      score: 0,
+      ready: true,
+      isHost: true
+    };
+    
     const game = {
       code: gameCode,
       hostId: socket.id,
       questionSetId: data.questionSetId,
       gameMode: data.gameMode,
-      players: [],
+      players: [hostPlayer],
       status: 'waiting',
       currentQuestion: 0,
       settings: data.settings || {}
     };
+    
     activeGames.set(gameCode, game);
     socket.join(gameCode);
     socket.emit('game-created', { gameCode, game });
-    console.log(`Game ${gameCode} created by host ${socket.id}`);
+    console.log(`Game ${gameCode} created by host ${socket.id}. Host added as player: ${hostPlayer.username}`);
   });
 
   socket.on('get-game-state', (data) => {
