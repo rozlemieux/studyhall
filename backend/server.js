@@ -971,27 +971,64 @@ io.on('connection', (socket) => {
 
   socket.on('submit-answer', (data) => {
     const game = activeGames.get(data.gameCode);
-    if (game) {
-      const player = game.players.find(p => p.id === socket.id);
-      const questionSet = questionSets.get(game.questionSetId);
-      const currentQ = questionSet.questions[game.currentQuestion];
+    if (!game) return;
+    
+    const player = game.players.find(p => p.id === socket.id);
+    if (!player) return;
+    
+    const questionSet = questionSets.get(game.questionSetId);
+    const currentQ = questionSet.questions[game.currentQuestion];
+    
+    // Mark player as answered
+    player.hasAnswered = true;
+    
+    // Score the answer
+    if (data.answer === currentQ.correct) {
+      const points = Math.max(100, 1000 - (data.timeElapsed * 10));
+      player.score += points;
       
-      if (player && data.answer === currentQ.correct) {
-        const points = Math.max(100, 1000 - (data.timeElapsed * 10));
-        player.score += points;
-        
-        // Award currency
-        const playerUser = playerData.get(player.userId);
-        if (playerUser) {
-          playerUser.currency += Math.floor(points / 10);
-        }
+      // Award currency
+      const playerUser = playerData.get(player.userId);
+      if (playerUser) {
+        playerUser.currency += Math.floor(points / 10);
       }
+    }
+    
+    // Emit answer result
+    io.to(data.gameCode).emit('answer-submitted', { 
+      playerId: socket.id, 
+      correct: data.answer === currentQ.correct,
+      players: game.players
+    });
+    
+    // Check if all players have answered
+    const allAnswered = game.players.every(p => p.hasAnswered);
+    
+    if (allAnswered) {
+      console.log(`All players answered for question ${game.currentQuestion + 1}, moving to next question in 3 seconds...`);
       
-      io.to(data.gameCode).emit('answer-submitted', { 
-        playerId: socket.id, 
-        correct: data.answer === currentQ.correct,
-        players: game.players
-      });
+      // Wait 3 seconds then move to next question
+      setTimeout(() => {
+        // Reset hasAnswered for all players
+        game.players.forEach(p => p.hasAnswered = false);
+        
+        game.currentQuestion++;
+        
+        if (game.currentQuestion < questionSet.questions.length) {
+          io.to(data.gameCode).emit('next-question', { 
+            question: questionSet.questions[game.currentQuestion],
+            questionNumber: game.currentQuestion + 1,
+            totalQuestions: questionSet.questions.length
+          });
+          console.log(`Sent question ${game.currentQuestion + 1} of ${questionSet.questions.length}`);
+        } else {
+          game.status = 'finished';
+          io.to(data.gameCode).emit('game-finished', { 
+            players: game.players.sort((a, b) => b.score - a.score)
+          });
+          console.log(`Game ${data.gameCode} finished`);
+        }
+      }, 3000);
     }
   });
 
