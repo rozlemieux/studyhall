@@ -49,6 +49,7 @@ function StudentDashboard({ user }) {
       socket.off('join-success');
       socket.off('join-error');
       socket.off('game-created');
+      socket.disconnect();
     };
   }, [gameCode, navigate]);
 
