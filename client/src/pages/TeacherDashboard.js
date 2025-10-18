@@ -78,8 +78,9 @@ function TeacherDashboard({ user }) {
         hostUserId: user.id,
         hostUsername: user.username,
         hostSlime: 'mint',
-      settings: {}
-    });
+        settings: {}
+      });
+    }
   };
 
   const gameModes = [
