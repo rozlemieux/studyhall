@@ -63,6 +63,7 @@ function GamePlay({ user }) {
     });
 
     socket.on('next-question', (data) => {
+      console.log('Received next-question event:', data);
       setCurrentQuestion(data.question);
       setQuestionNumber(data.questionNumber);
       setTotalQuestions(data.totalQuestions);
