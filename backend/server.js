@@ -895,14 +895,17 @@ io.on('connection', (socket) => {
       return;
     }
     
-    // Check if player is already in game (by userId or socketId)
-    const existingPlayer = game.players.find(p => p.userId === data.userId || p.id === socket.id);
+    // Check if player is already in game (by userId)
+    const existingPlayer = game.players.find(p => p.userId === data.userId);
     
     if (existingPlayer) {
-      // Player already in game, just send success
-      console.log(`Player ${data.username} already in game ${data.gameCode}, reconnecting...`);
+      // Player already in game, update their socket ID and rejoin room
+      console.log(`Player ${data.username} already in game ${data.gameCode}, reconnecting with new socket...`);
+      existingPlayer.id = socket.id; // Update to new socket ID
       socket.join(data.gameCode);
       socket.emit('join-success', { game });
+      // Notify others that player list updated (in case socket ID matters elsewhere)
+      io.to(data.gameCode).emit('player-joined', { player: existingPlayer, players: game.players });
       return;
     }
     
