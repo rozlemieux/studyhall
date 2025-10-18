@@ -132,7 +132,8 @@ function GameLobby({ user }) {
       socket.off('game-created');
       socket.disconnect();
     };
-  }, [gameCode, navigate, user, playSound, showSuccess, showError, playerData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameCode, user.id, user.role]); // Only recreate if game code or user changes
 
   const handleStartGame = () => {
     if (socketRef.current) {
