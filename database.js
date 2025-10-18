@@ -120,6 +120,57 @@ function initializeDatabase() {
       if (err) console.error('Error creating user_achievements table:', err);
       else console.log('User achievements table ready');
     });
+
+    // Practice games table
+    db.run(`
+      CREATE TABLE IF NOT EXISTS practice_games (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        question_set_id TEXT NOT NULL,
+        game_mode TEXT NOT NULL,
+        difficulty TEXT DEFAULT 'medium',
+        score INTEGER DEFAULT 0,
+        questions_correct INTEGER DEFAULT 0,
+        questions_total INTEGER DEFAULT 0,
+        currency_earned INTEGER DEFAULT 0,
+        played_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `, (err) => {
+      if (err) console.error('Error creating practice_games table:', err);
+      else console.log('Practice games table ready');
+    });
+
+    // Classes table
+    db.run(`
+      CREATE TABLE IF NOT EXISTS classes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        description TEXT,
+        teacher_id INTEGER NOT NULL,
+        class_code TEXT UNIQUE NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (teacher_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `, (err) => {
+      if (err) console.error('Error creating classes table:', err);
+      else console.log('Classes table ready');
+    });
+
+    // Class members table
+    db.run(`
+      CREATE TABLE IF NOT EXISTS class_members (
+        class_id INTEGER NOT NULL,
+        student_id INTEGER NOT NULL,
+        joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (class_id, student_id),
+        FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE,
+        FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `, (err) => {
+      if (err) console.error('Error creating class_members table:', err);
+      else console.log('Class members table ready');
+    });
   });
 }
 
