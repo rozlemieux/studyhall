@@ -928,17 +928,28 @@ io.on('connection', (socket) => {
 
   socket.on('start-game', (data) => {
     const game = activeGames.get(data.gameCode);
-    if (game && socket.id === game.hostId) {
-      game.status = 'playing';
-      const questionSet = questionSets.get(game.questionSetId);
-      io.to(data.gameCode).emit('game-started', { 
-        game, 
-        gameMode: game.gameMode || 'classic',
-        question: questionSet.questions[0],
-        questionNumber: 1,
-        totalQuestions: questionSet.questions.length
-      });
+    if (!game) {
+      console.log(`Start game failed: Game ${data.gameCode} not found`);
+      return;
     }
+    
+    // Check if the player requesting start is the host (by checking isHost flag in players)
+    const requestingPlayer = game.players.find(p => p.id === socket.id);
+    if (!requestingPlayer || !requestingPlayer.isHost) {
+      console.log(`Start game denied: Socket ${socket.id} is not the host`);
+      return;
+    }
+    
+    console.log(`Starting game ${data.gameCode} with ${game.players.length} players`);
+    game.status = 'playing';
+    const questionSet = questionSets.get(game.questionSetId);
+    io.to(data.gameCode).emit('game-started', { 
+      game, 
+      gameMode: game.gameMode || 'classic',
+      question: questionSet.questions[0],
+      questionNumber: 1,
+      totalQuestions: questionSet.questions.length
+    });
   });
 
   socket.on('submit-answer', (data) => {
