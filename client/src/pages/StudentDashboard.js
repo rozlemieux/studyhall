@@ -149,10 +149,11 @@ function StudentDashboard({ user }) {
       return;
     }
 
-    socket.emit('join-game', {
-      gameCode: gameCode.toUpperCase(),
-      username: user.username,
-      slime: playerData?.selectedSlime || 'mint',
+    if (socketRef.current) {
+      socketRef.current.emit('join-game', {
+        gameCode: gameCode.toUpperCase(),
+        username: user.username,
+        slime: playerData?.selectedSlime || 'mint',
       userId: user.id
     });
   };
