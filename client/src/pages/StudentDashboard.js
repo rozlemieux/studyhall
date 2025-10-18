@@ -56,7 +56,7 @@ function StudentDashboard({ user }) {
       socket.off('game-created');
       socket.disconnect();
     };
-  }, [gameCode, navigate]);
+  }, []); // Only create socket once on mount
 
   const fetchPlayerData = async () => {
     try {
