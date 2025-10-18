@@ -208,7 +208,7 @@ function PracticeGamePlay() {
 
     return (
       <div className="practice-gameplay-page">
-        {showVictory && <VictoryCelebration />}
+        {showVictory && <VictoryCelebration rank={1} playerName="You" score={playerScore} />}
         <motion.div
           className="game-over-card"
           initial={{ opacity: 0, scale: 0.8 }}
