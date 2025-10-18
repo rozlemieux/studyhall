@@ -70,13 +70,14 @@ function TeacherDashboard({ user }) {
       return;
     }
 
-    socket.emit('create-game', {
-      questionSetId: selectedSet,
-      gameMode: gameMode,
-      mapId: selectedMap,
-      hostUserId: user.id,
-      hostUsername: user.username,
-      hostSlime: 'mint',
+    if (socketRef.current) {
+      socketRef.current.emit('create-game', {
+        questionSetId: selectedSet,
+        gameMode: gameMode,
+        mapId: selectedMap,
+        hostUserId: user.id,
+        hostUsername: user.username,
+        hostSlime: 'mint',
       settings: {}
     });
   };
