@@ -35,7 +35,7 @@ function StudentDashboard({ user }) {
     });
 
     socket.on('join-success', (data) => {
-      navigate(`/lobby/${gameCode}`);
+      navigate(`/lobby/${data.game.code}`);
     });
 
     socket.on('join-error', (data) => {
