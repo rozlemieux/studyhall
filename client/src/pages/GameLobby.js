@@ -19,6 +19,25 @@ function GameLobby({ user }) {
   useEffect(() => {
     console.log(`GameLobby mounted for code: ${gameCode}, socket ID: ${socket.id}`);
     
+    // Fetch player data for slime
+    fetch(`/api/player/${user.id}`)
+      .then(res => res.json())
+      .then(data => {
+        setPlayerData(data);
+        
+        // Join the game if we're a student
+        if (user.role === 'student') {
+          console.log('Attempting to join game as student');
+          socket.emit('join-game', {
+            gameCode: gameCode,
+            userId: user.id,
+            username: user.username,
+            slime: data.selectedSlime || 'mint'
+          });
+        }
+      })
+      .catch(err => console.error('Error fetching player data:', err));
+    
     // Request current game state when component mounts
     socket.emit('get-game-state', { gameCode });
 
@@ -31,6 +50,21 @@ function GameLobby({ user }) {
         setIsHost(amHost);
         console.log(`I am ${amHost ? 'HOST' : 'PLAYER'}. Players: ${data.game.players.length}`);
       }
+    });
+
+    socket.on('join-success', (data) => {
+      console.log('Successfully joined game!', data);
+      setGame(data.game);
+      setPlayers(data.game.players || []);
+      setIsHost(false);
+      playSound('join');
+      showSuccess(`Joined game ${gameCode}!`);
+    });
+
+    socket.on('join-error', (data) => {
+      console.error('Failed to join game:', data.message);
+      setError(data.message);
+      showError(data.message);
     });
 
     socket.on('player-joined', (data) => {
