@@ -144,8 +144,17 @@ function GameLobby({ user }) {
   }, [gameCode, user.id, user.role]); // Only recreate if game code or user changes
 
   const handleStartGame = () => {
+    console.log('Start game button clicked!');
+    console.log('Socket ref exists:', !!socketRef.current);
+    console.log('Socket connected:', socketRef.current?.connected);
+    console.log('Game code:', gameCode);
+    console.log('Is host:', isHost);
+    
     if (socketRef.current) {
+      console.log('Emitting start-game event...');
       socketRef.current.emit('start-game', { gameCode });
+    } else {
+      console.error('Socket ref is null!');
     }
   };
 
