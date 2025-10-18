@@ -988,14 +988,20 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
     // Handle player disconnect from games
+    // Only remove players if game is in progress (not in waiting lobby)
+    // This prevents removing players when they navigate between pages
     activeGames.forEach((game, code) => {
-      const playerIndex = game.players.findIndex(p => p.id === socket.id);
-      if (playerIndex !== -1) {
-        const playerName = game.players[playerIndex].username;
-        game.players.splice(playerIndex, 1);
-        io.to(code).emit('player-left', { players: game.players });
-        console.log(`Player ${playerName} left game ${code}. Remaining players: ${game.players.length}`);
+      if (game.status === 'in-progress' || game.status === 'finished') {
+        const playerIndex = game.players.findIndex(p => p.id === socket.id);
+        if (playerIndex !== -1) {
+          const playerName = game.players[playerIndex].username;
+          game.players.splice(playerIndex, 1);
+          io.to(code).emit('player-left', { players: game.players });
+          console.log(`Player ${playerName} left game ${code}. Remaining players: ${game.players.length}`);
+        }
       }
+      // For waiting lobbies, keep players in the list even if socket disconnects
+      // They will reconnect with a new socket when they reach the GameLobby
     });
   });
 });
