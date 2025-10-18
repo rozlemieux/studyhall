@@ -169,6 +169,12 @@ function StudentDashboard({ user }) {
                 + Create Questions
               </button>
               <button 
+                className="button button-secondary"
+                onClick={() => navigate('/practice')}
+              >
+                <Icon name="target" size={18} /> Practice Solo
+              </button>
+              <button 
                 className="button button-primary"
                 onClick={() => setShowCreateGame(true)}
               >
