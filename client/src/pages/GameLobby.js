@@ -80,8 +80,8 @@ function GameLobby({ user }) {
       setGame(data.game);
       setPlayers(data.game.players || []);
       
-      // Check if we're the host
-      const amHost = socket.id === data.game.hostId;
+      // Check if we're the host (by userId, not socket.id since sockets change)
+      const amHost = data.game.players.some(p => p.userId === user.id && p.isHost);
       setIsHost(amHost);
       
       if (!amHost) {
