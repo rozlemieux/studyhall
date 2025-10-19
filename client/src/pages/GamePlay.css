@@ -376,32 +376,127 @@
 }
 
 @media (max-width: 768px) {
+  .game-page {
+    padding: 10px;
+  }
+
+  .game-container {
+    padding: 15px;
+  }
+
+  .game-header {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .timer-display {
+    order: -1;
+    font-size: 36px;
+  }
+
+  .question-progress {
+    font-size: 14px;
+  }
+
+  .question-section {
+    padding: 20px 15px;
+  }
+
+  .question-text {
+    font-size: 18px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
   .answers-grid {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
   
-  .question-text {
-    font-size: 22px;
+  .answer-btn {
+    padding: 14px 16px;
+    min-height: 60px;
   }
-  
+
   .answer-text {
+    font-size: 15px;
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .classic-scoreboard {
+    padding: 15px;
+  }
+
+  .score-list {
+    gap: 8px;
+  }
+
+  .score-item {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .score-rank {
     font-size: 16px;
+    min-width: 32px;
+  }
+
+  .score-slime {
+    width: 32px;
+    height: 32px;
+  }
+
+  .score-name {
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .score-points {
+    font-size: 15px;
   }
   
   .results-screen {
-    padding: 40px 20px;
+    padding: 20px 15px;
   }
   
   .results-title {
-    font-size: 32px;
+    font-size: 24px;
   }
   
   .leaderboard-item {
-    padding: 16px;
+    padding: 12px;
+    flex-direction: column;
+    text-align: center;
   }
   
   .player-avatar {
-    font-size: 40px;
+    font-size: 32px;
+  }
+
+  .player-info h3 {
+    font-size: 16px;
+  }
+
+  .player-score {
+    font-size: 24px;
+  }
+
+  .loading-game {
+    padding: 40px 20px;
+  }
+
+  .loading-game h2 {
+    font-size: 20px;
+  }
+
+  .loading-game p {
+    font-size: 14px;
   }
 }
 
