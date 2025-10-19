@@ -51,3 +51,45 @@ code {
   background: rgba(255, 255, 255, 0.5);
 }
 
+/* Mobile-friendly improvements */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+
+  /* Ensure all buttons are touchable */
+  button,
+  .button,
+  a.button,
+  input[type="submit"],
+  input[type="button"] {
+    min-height: 44px;
+    min-width: 44px;
+    -webkit-tap-highlight-color: rgba(0, 200, 120, 0.3);
+  }
+
+  /* Prevent text from breaking layout */
+  p, span, div, h1, h2, h3, h4, h5, h6 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
+  /* Better input fields on mobile */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+    max-width: 100%;
+  }
+
+  /* Prevent zooming on input focus */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  textarea {
+    font-size: 16px;
+  }
+}
+
