@@ -183,19 +183,97 @@
 }
 
 @media (max-width: 768px) {
+  .dashboard-page {
+    padding: 15px 10px;
+  }
+
+  .dashboard-container {
+    padding: 0;
+  }
+
+  .dashboard-header {
+    padding: 20px 15px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 24px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .header-actions .button {
+    width: 100%;
+    justify-content: center;
+  }
+
   .dashboard-grid {
     grid-template-columns: 1fr;
+    gap: 15px;
   }
-  
-  .dashboard-header h1 {
-    font-size: 32px;
+
+  .dashboard-card {
+    padding: 20px 15px;
+  }
+
+  .dashboard-card h2 {
+    font-size: 20px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-item h3 {
+    font-size: 24px;
+  }
+
+  .stat-item p {
+    font-size: 13px;
   }
   
   .game-modes-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .mode-card {
+    padding: 15px;
+  }
+
+  .mode-card h3 {
+    font-size: 16px;
+  }
+
+  .mode-card p {
+    font-size: 13px;
   }
   
   .quick-actions {
     grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .action-button {
+    padding: 15px;
+    font-size: 15px;
+  }
+
+  .join-game-section {
+    padding: 20px 15px;
+  }
+
+  .join-game-section input {
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+
+  .join-game-section .button {
+    padding: 12px 20px;
+    font-size: 16px;
   }
 }
