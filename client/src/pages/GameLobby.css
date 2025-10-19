@@ -234,22 +234,96 @@
 }
 
 @media (max-width: 768px) {
+  .lobby-page {
+    padding: 20px 12px;
+  }
+
   .lobby-header {
     flex-direction: column;
     align-items: flex-start;
+    padding: 20px;
+  }
+  
+  .lobby-header h1 {
+    font-size: 24px;
+    width: 100%;
+    text-align: center;
   }
   
   .game-code-display {
     width: 100%;
     justify-content: center;
+    padding: 12px 20px;
+  }
+  
+  .code-value {
+    font-size: 24px;
+    letter-spacing: 3px;
+  }
+  
+  .players-section {
+    padding: 20px 15px;
+  }
+  
+  .players-section h2 {
+    font-size: 20px;
   }
   
   .players-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+  }
+  
+  .player-card {
+    padding: 12px 8px;
+  }
+  
+  .player-slime {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .player-name {
+    font-size: 13px;
+    word-break: break-word;
   }
   
   .lobby-info {
     grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 20px 15px;
+  }
+  
+  .info-card {
+    padding: 15px;
+  }
+  
+  .info-text h3 {
+    font-size: 16px;
+  }
+  
+  .info-text p {
+    font-size: 13px;
+  }
+  
+  .lobby-actions {
+    padding: 20px 15px;
+  }
+  
+  .start-game-btn,
+  .button-primary,
+  .button-secondary {
+    font-size: 16px;
+    padding: 14px 24px;
+    white-space: nowrap;
+  }
+  
+  .start-hint {
+    font-size: 13px;
+  }
+  
+  .waiting-host p {
+    font-size: 16px;
   }
 }
 
