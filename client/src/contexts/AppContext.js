@@ -116,7 +116,12 @@ export const AppProvider = ({ children }) => {
     playSound,
     
     // Utilities
-    copyToClipboard
+    copyToClipboard,
+    
+    // Collection modal
+    showCollectionModal,
+    openCollectionModal: () => setShowCollectionModal(true),
+    closeCollectionModal: () => setShowCollectionModal(false)
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
