@@ -98,16 +98,16 @@ function Navbar({ user, onLogout, soundEnabled, onToggleSound }) {
                     {userMenuOpen && (
                       <div className="user-dropdown">
                         {user.role === 'student' && (
-                          <Link 
-                            to="/shop" 
+                          <button 
                             className="dropdown-item"
                             onClick={() => {
+                              openCollectionModal();
                               setUserMenuOpen(false);
                               closeMobileMenu();
                             }}
                           >
                             <Icon name="sparkles" size={16} /> My Collection
-                          </Link>
+                          </button>
                         )}
                         <button 
                           onClick={handleLogout} 
