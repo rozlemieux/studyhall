@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useApp } from '../contexts/AppContext';
 import Icon from './Icon';
 import Logo from './Logo';
 import './Navbar.css';
 
 function Navbar({ user, onLogout, soundEnabled, onToggleSound }) {
   const navigate = useNavigate();
+  const { openCollectionModal } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
