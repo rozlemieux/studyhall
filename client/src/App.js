@@ -71,18 +71,27 @@ function AppContent() {
   };
 
   const refreshUserCurrency = async () => {
-    if (!user) return;
+    if (!user) {
+      console.log('refreshUserCurrency: No user, skipping');
+      return;
+    }
+    
+    console.log(`refreshUserCurrency: Fetching latest currency for user ${user.id}...`);
     
     try {
       const response = await fetch(`/api/player/${user.id}`);
       if (response.ok) {
         const playerData = await response.json();
+        console.log(`refreshUserCurrency: Got currency ${playerData.currency}, old was ${user.currency}`);
         const updatedUser = {
           ...user,
           currency: playerData.currency
         };
         setUser(updatedUser);
         localStorage.setItem('studyhall_user', JSON.stringify(updatedUser));
+        console.log('refreshUserCurrency: User state and localStorage updated');
+      } else {
+        console.error('refreshUserCurrency: API returned error', response.status);
       }
     } catch (error) {
       console.error('Error refreshing currency:', error);
