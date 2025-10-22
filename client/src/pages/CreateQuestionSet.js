@@ -46,7 +46,7 @@ function CreateQuestionSet({ user }) {
       });
       
       alert('Question set created successfully!');
-      navigate('/teacher');
+      navigate(user?.role === 'teacher' ? '/teacher' : '/student');
     } catch (error) {
       console.error('Error creating question set:', error);
       alert('Failed to create question set');
