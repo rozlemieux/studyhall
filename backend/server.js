@@ -434,6 +434,15 @@ app.post('/api/auth/register', async (req, res) => {
   
   try {
     const user = await database.auth.register(username, password, role);
+    
+    // Fetch player data to include currency (students start with 100 coins)
+    if (user.role === 'student') {
+      const playerData = await database.playerData.get(user.id);
+      if (playerData) {
+        user.currency = playerData.currency;
+      }
+    }
+    
     res.json(user);
   } catch (error) {
     res.status(400).json(error);
