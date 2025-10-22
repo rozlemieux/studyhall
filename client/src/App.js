@@ -116,8 +116,8 @@ function AppContent() {
           />
           <Route path="/create-set" element={<CreateQuestionSet user={user} />} />
           <Route path="/lobby/:gameCode" element={<GameLobby user={user} />} />
-          <Route path="/play/:gameCode" element={<GamePlay user={user} />} />
-          <Route path="/shop" element={<SlimeShop user={user} />} />
+          <Route path="/play/:gameCode" element={<GamePlay user={user} refreshUserCurrency={refreshUserCurrency} />} />
+          <Route path="/shop" element={<SlimeShop user={user} refreshUserCurrency={refreshUserCurrency} />} />
           <Route 
             path="/maps" 
             element={user ? <MapsBrowser user={user} /> : <Navigate to="/login" />} 
