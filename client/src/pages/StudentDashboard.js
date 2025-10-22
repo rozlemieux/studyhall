@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import io from 'socket.io-client';
+import { useApp } from '../contexts/AppContext';
 import Icon from '../components/Icon';
 import { getSlimeSprite } from '../utils/slimeSprites';
 import './StudentDashboard.css';
@@ -11,7 +12,7 @@ function StudentDashboard({ user }) {
   const [gameCode, setGameCode] = useState('');
   const [playerData, setPlayerData] = useState(null);
   const [allSlimes, setAllSlimes] = useState([]);
-  const [showCollection, setShowCollection] = useState(false);
+  const { showCollectionModal, openCollectionModal, closeCollectionModal } = useApp();
   const [questionSets, setQuestionSets] = useState([]);
   const [maps, setMaps] = useState([]);
   const [showCreateGame, setShowCreateGame] = useState(false);
