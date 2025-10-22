@@ -17,6 +17,7 @@ export const AppProvider = ({ children }) => {
     const saved = localStorage.getItem('studyhall_sound_enabled');
     return saved !== null ? JSON.parse(saved) : true;
   });
+  const [showCollectionModal, setShowCollectionModal] = useState(false);
 
   // Toast notification system
   const showToast = useCallback((message, type = 'info', duration = 3000) => {
