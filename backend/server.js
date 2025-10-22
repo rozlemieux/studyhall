@@ -996,11 +996,17 @@ io.on('connection', (socket) => {
       const points = Math.max(100, 1000 - (data.timeElapsed * 10));
       player.score += points;
       
-      // Award currency
-      const playerUser = playerData.get(player.userId);
-      if (playerUser) {
-        playerUser.currency += Math.floor(points / 10);
-      }
+      // Award currency (async - don't wait for it)
+      const currencyReward = Math.floor(points / 10);
+      database.playerData.get(player.userId)
+        .then(playerUser => {
+          if (playerUser) {
+            return database.playerData.update(player.userId, {
+              currency: playerUser.currency + currencyReward
+            });
+          }
+        })
+        .catch(err => console.error('Error awarding currency:', err));
     }
     
     // Emit answer result
