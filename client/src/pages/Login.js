@@ -7,12 +7,22 @@ import { getSlimeSprite } from '../utils/slimeSprites';
 import './Login.css';
 
 function Login({ onLogin }) {
+  // Check if user has visited before
+  const hasVisitedBefore = localStorage.getItem('studyhall_visited') === 'true';
+  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('student');
-  const [isRegister, setIsRegister] = useState(true);
+  const [isRegister, setIsRegister] = useState(!hasVisitedBefore); // Show register for first-timers, login for returning
   const navigate = useNavigate();
+  
+  // Mark as visited
+  React.useEffect(() => {
+    if (!hasVisitedBefore) {
+      localStorage.setItem('studyhall_visited', 'true');
+    }
+  }, [hasVisitedBefore]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
