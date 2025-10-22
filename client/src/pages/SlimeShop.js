@@ -74,9 +74,10 @@ function SlimeShop({ user, refreshUserCurrency }) {
       setReceivedSlime(response.data.receivedSlime);
       setSelectedPack(null);
       
-      // Update user in localStorage
-      const updatedUser = { ...user, currency: response.data.player.currency };
-      localStorage.setItem('studyhall_user', JSON.stringify(updatedUser));
+      // Refresh currency in navbar
+      if (refreshUserCurrency) {
+        refreshUserCurrency();
+      }
     } catch (error) {
       alert(error.response?.data?.error || 'Purchase failed');
     }
