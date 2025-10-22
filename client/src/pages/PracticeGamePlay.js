@@ -178,6 +178,13 @@ function PracticeGamePlay({ refreshUserCurrency }) {
         questionsTotal: questionSet.questions.length,
         currencyEarned
       });
+      
+      // Refresh user currency after saving
+      if (refreshUserCurrency) {
+        setTimeout(() => {
+          refreshUserCurrency();
+        }, 1000);
+      }
     } catch (error) {
       console.error('Error saving practice game:', error);
     }
