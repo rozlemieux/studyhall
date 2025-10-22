@@ -453,7 +453,7 @@ function StudentDashboard({ user }) {
 
         {/* Collection Modal */}
         <AnimatePresence>
-          {showCollection && (
+          {showCollectionModal && (
             <motion.div
               className="collection-modal-overlay"
               initial={{ opacity: 0 }}
