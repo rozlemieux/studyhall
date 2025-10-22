@@ -404,27 +404,42 @@
   }
 
   .question-text {
-    font-size: 18px;
-    line-height: 1.4;
+    font-size: 17px;
+    line-height: 1.5;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    hyphens: auto;
+    padding: 10px;
   }
 
   .answers-grid {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
+    padding: 0 5px;
   }
   
   .answer-btn {
-    padding: 14px 16px;
-    min-height: 60px;
+    padding: 16px 14px;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .answer-letter {
+    font-size: 16px;
+    min-width: 36px;
+    height: 36px;
   }
 
   .answer-text {
     font-size: 15px;
-    line-height: 1.3;
+    line-height: 1.4;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    hyphens: auto;
+    text-align: left;
+    flex: 1;
   }
 
   .classic-scoreboard {
