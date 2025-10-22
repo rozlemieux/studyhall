@@ -78,14 +78,19 @@ function GamePlay({ user, refreshUserCurrency }) {
     });
 
     socket.on('game-finished', (data) => {
+      console.log('Game finished event received');
       setPlayers(data.players);
       setGameFinished(true);
       
       // Refresh user currency after game ends
       if (refreshUserCurrency) {
+        console.log('Scheduling currency refresh in 2 seconds...');
         setTimeout(() => {
+          console.log('Refreshing currency now...');
           refreshUserCurrency();
-        }, 1000); // Small delay to ensure backend has updated
+        }, 2000); // 2 second delay to ensure all backend writes complete
+      } else {
+        console.warn('refreshUserCurrency function not available!');
       }
     });
 
