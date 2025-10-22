@@ -144,7 +144,7 @@ function AppContent() {
           />
           <Route 
             path="/practice-play" 
-            element={user && user.role === 'student' ? <PracticeGamePlay user={user} /> : <Navigate to="/login" />} 
+            element={user && user.role === 'student' ? <PracticeGamePlay user={user} refreshUserCurrency={refreshUserCurrency} /> : <Navigate to="/login" />} 
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
