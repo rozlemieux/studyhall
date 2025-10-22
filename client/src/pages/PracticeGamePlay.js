@@ -255,7 +255,7 @@ function PracticeGamePlay({ user, refreshUserCurrency }) {
             </button>
             <button 
               className="button button-secondary"
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate(user?.role === 'teacher' ? '/teacher' : '/student')}
             >
               Back to Dashboard
             </button>
