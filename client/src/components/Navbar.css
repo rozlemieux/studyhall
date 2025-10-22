@@ -314,17 +314,27 @@
     width: fit-content;
   }
 
-  .username {
-    font-size: 16px;
-    font-weight: 700;
-    color: #00C878;
+  .user-menu-wrapper {
+    width: 100%;
   }
 
-  .logout-btn {
+  .username-button {
     width: 100%;
-    padding: 12px;
+    justify-content: space-between;
+    padding: 12px 16px;
     font-size: 16px;
-    border-radius: 8px;
+  }
+
+  .user-dropdown {
+    position: static;
+    box-shadow: none;
+    margin-top: 8px;
+    width: 100%;
+  }
+
+  .dropdown-item {
+    padding: 12px 16px;
+    font-size: 15px;
   }
 
   .nav-link-btn {
