@@ -98,6 +98,11 @@ function SlimeShop({ user, refreshUserCurrency }) {
       setEasterEggCode('');
       setShowCodeInput(false);
       alert('Secret code redeemed successfully!');
+      
+      // Refresh currency in navbar
+      if (refreshUserCurrency) {
+        refreshUserCurrency();
+      }
     } catch (error) {
       alert(error.response?.data?.error || 'Invalid code');
     }
