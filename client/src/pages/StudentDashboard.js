@@ -445,7 +445,7 @@ function StudentDashboard({ user }) {
           </div>
           <button 
             className="button button-primary view-all-btn"
-            onClick={() => setShowCollection(true)}
+            onClick={openCollectionModal}
           >
             View Full Collection
           </button>
