@@ -77,14 +77,45 @@ function Navbar({ user, onLogout, soundEnabled, onToggleSound }) {
                   {soundEnabled ? '🔊' : '🔇'}
                 </button>
                 
-                <div className="user-info">
+                <div className="user-info" ref={userMenuRef}>
                   {user.role === 'student' && (
                     <span className="currency-badge">
                       <Icon name="coin" size={18} /> {user.currency || 0}
                     </span>
                   )}
-                  <span className="username">{user.username}</span>
-                  <button onClick={handleLogout} className="logout-btn">Logout</button>
+                  
+                  <div className="user-menu-wrapper">
+                    <button 
+                      className="username-button"
+                      onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    >
+                      {user.username}
+                      <span className="dropdown-arrow">{userMenuOpen ? '▲' : '▼'}</span>
+                    </button>
+                    
+                    {userMenuOpen && (
+                      <div className="user-dropdown">
+                        {user.role === 'student' && (
+                          <Link 
+                            to="/shop" 
+                            className="dropdown-item"
+                            onClick={() => {
+                              setUserMenuOpen(false);
+                              closeMobileMenu();
+                            }}
+                          >
+                            <Icon name="sparkles" size={16} /> My Collection
+                          </Link>
+                        )}
+                        <button 
+                          onClick={handleLogout} 
+                          className="dropdown-item logout-item"
+                        >
+                          <Icon name="log-out" size={16} /> Logout
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </>
