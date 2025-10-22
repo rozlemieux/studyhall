@@ -67,18 +67,106 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  position: relative;
 }
 
 .currency-badge {
-  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-weight: 700;
-  color: #333;
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
   display: flex;
   align-items: center;
   gap: 6px;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+}
+
+.user-menu-wrapper {
+  position: relative;
+}
+
+.username-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(0, 200, 120, 0.1);
+  border: 2px solid #00C878;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #00C878;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.username-button:hover {
+  background: rgba(0, 200, 120, 0.2);
+  transform: translateY(-2px);
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  margin-left: 4px;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  z-index: 1000;
+  overflow: hidden;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  color: #333;
+  text-decoration: none;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background: #f8f9fa;
+}
+
+.logout-item {
+  color: #e74c3c;
+}
+
+.logout-item:hover {
+  background: #fee;
 }
 
 .username {
@@ -87,20 +175,20 @@
 }
 
 .logout-btn {
-  background: rgba(244, 67, 54, 0.1);
-  color: #f44336;
+  padding: 8px 20px;
+  background: #e74c3c;
+  color: white;
   border: none;
-  padding: 8px 16px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s;
 }
 
 .logout-btn:hover {
-  background: #f44336;
-  color: white;
+  background: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
 }
 
 .nav-logout {
