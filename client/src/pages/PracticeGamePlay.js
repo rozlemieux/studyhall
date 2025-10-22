@@ -7,7 +7,7 @@ import Icon from '../components/Icon';
 import VictoryCelebration from '../components/VictoryCelebration';
 import './PracticeGamePlay.css';
 
-function PracticeGamePlay({ refreshUserCurrency }) {
+function PracticeGamePlay({ user, refreshUserCurrency }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { questionSetId, difficulty, gameMode, userId } = location.state || {};
