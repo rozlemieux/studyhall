@@ -386,17 +386,28 @@
 
   .game-header {
     flex-direction: column;
-    gap: 15px;
-    padding: 15px;
+    gap: 12px;
+    padding: 12px;
+    margin-bottom: 15px;
+  }
+
+  .timer {
+    order: -1;
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 24px;
+    font-weight: 700;
   }
 
   .timer-display {
-    order: -1;
-    font-size: 36px;
+    font-size: 28px;
   }
 
   .question-progress {
-    font-size: 14px;
+    font-size: 15px;
+    text-align: center;
+    width: 100%;
   }
 
   .question-section {
