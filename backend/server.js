@@ -1096,9 +1096,38 @@ io.on('connection', (socket) => {
         });
       } else {
         game.status = 'finished';
-        io.to(data.gameCode).emit('game-finished', { 
-          players: game.players.sort((a, b) => b.score - a.score)
+        
+        // Sort players by score
+        const sortedPlayers = game.players.sort((a, b) => b.score - a.score);
+        const winner = sortedPlayers[0];
+        
+        // Save game to history and update stats for each player
+        sortedPlayers.forEach((player, index) => {
+          const isWinner = index === 0;
+          const placement = index + 1;
+          
+          // Save to game history
+          database.gameHistory.save(
+            player.userId,
+            game.questionSetId,
+            game.gameMode,
+            player.score,
+            isWinner ? 1 : 0,
+            placement
+          ).catch(err => console.error('Error saving game history:', err));
+          
+          // Update player stats
+          database.playerStats.update(player.userId, {
+            totalGames: 1,
+            totalWins: isWinner ? 1 : 0,
+            totalCurrencyEarned: Math.floor(player.score / 10)
+          }).catch(err => console.error('Error updating player stats:', err));
         });
+        
+        io.to(data.gameCode).emit('game-finished', { 
+          players: sortedPlayers
+        });
+        console.log(`Game ${data.gameCode} finished. Winner: ${winner.username}`);
       }
     }
   });
