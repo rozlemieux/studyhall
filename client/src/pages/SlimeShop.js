@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getSlimeSprite } from '../utils/slimeSprites';
 import './SlimeShop.css';
 
-function SlimeShop({ user }) {
+function SlimeShop({ user, refreshUserCurrency }) {
   const [packs, setPacks] = useState([]);
   const [allSlimes, setAllSlimes] = useState([]);
   const [playerData, setPlayerData] = useState(null);
