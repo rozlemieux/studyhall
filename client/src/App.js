@@ -70,6 +70,25 @@ function AppContent() {
     localStorage.removeItem('studyhall_user');
   };
 
+  const refreshUserCurrency = async () => {
+    if (!user) return;
+    
+    try {
+      const response = await fetch(`/api/player/${user.id}`);
+      if (response.ok) {
+        const playerData = await response.json();
+        const updatedUser = {
+          ...user,
+          currency: playerData.currency
+        };
+        setUser(updatedUser);
+        localStorage.setItem('studyhall_user', JSON.stringify(updatedUser));
+      }
+    } catch (error) {
+      console.error('Error refreshing currency:', error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="app-loading">
