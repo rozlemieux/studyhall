@@ -80,6 +80,13 @@ function GamePlay({ user, refreshUserCurrency }) {
     socket.on('game-finished', (data) => {
       setPlayers(data.players);
       setGameFinished(true);
+      
+      // Refresh user currency after game ends
+      if (refreshUserCurrency) {
+        setTimeout(() => {
+          refreshUserCurrency();
+        }, 1000); // Small delay to ensure backend has updated
+      }
     });
 
     return () => {
