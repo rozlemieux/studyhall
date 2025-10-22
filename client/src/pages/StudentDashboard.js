@@ -459,7 +459,7 @@ function StudentDashboard({ user }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setShowCollection(false)}
+              onClick={closeCollectionModal}
             >
               <motion.div
                 className="collection-modal"
@@ -470,7 +470,7 @@ function StudentDashboard({ user }) {
               >
                 <button 
                   className="modal-close"
-                  onClick={() => setShowCollection(false)}
+                  onClick={closeCollectionModal}
                 >
                   ✕
                 </button>
