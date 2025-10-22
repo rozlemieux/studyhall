@@ -61,7 +61,7 @@ function CreateQuestionSet({ user }) {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="page-header">
-            <button onClick={() => navigate('/teacher')} className="back-btn">
+            <button onClick={() => navigate(user?.role === 'teacher' ? '/teacher' : '/student')} className="back-btn">
               ← Back
             </button>
             <h1>Create Question Set</h1>
