@@ -8,7 +8,7 @@ import BattleGame from './games/BattleGame';
 import GoldQuestGame from './games/GoldQuestGame';
 import './GamePlay.css';
 
-function GamePlay({ user }) {
+function GamePlay({ user, refreshUserCurrency }) {
   const { gameCode } = useParams();
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionNumber, setQuestionNumber] = useState(0);
